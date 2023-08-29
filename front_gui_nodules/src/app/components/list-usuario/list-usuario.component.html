@@ -1,0 +1,31 @@
+<app-menu></app-menu>
+<div class="wrapper" style="width: 60%; margin-left: 20%;">
+    <h4  class="mb-4 col-md-12 col-sm-12 col-12 text-center col-light"   > Usuarios</h4>
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Correo</th>
+                    <th>Telefono</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users">
+                    <td>{{user.nombre}} {{user.apellido}}</td>
+                    <td>{{user.username}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.telefono}}</td>
+                    <td><button class="btn btn-outline-warning" routerLink="/usuario/editar/{{user.nombreUsuario}}"><i class="fa-solid fa-pen"></i></button></td>
+                    <td><button class="btn btn-outline-danger" (click)="borrar(user)"><i class="fa-solid fa-trash-can"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mx-auto" style="width: 200px;">
+        <button type="button" class="btn btn-success"  [routerLink]="['/usuario/crear']">Crear Usuario</button>
+      </div>
+</div>
