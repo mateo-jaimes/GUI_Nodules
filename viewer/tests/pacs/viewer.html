@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>DWV Test Viewer</title>
+<meta charset="UTF-8">
+<meta name="description" content="DICOM Web Viewer (DWV) simple version">
+<meta name="keywords" content="DICOM,HTML5,JavaScript,medical,imaging,DWV">
+<!-- Style -->
+<style type="text/css">
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+}
+table, td, th {
+  margin: 5px 0;
+  border: 1px solid #aaa;
+  
+}
+table {
+  border-collapse: collapse;
+}
+td, th {
+  padding: 10px;
+}
+progress {
+  width: 40%;
+}
+span {
+  font-size: small;
+  font-style: italic;
+}
+button {
+  margin: 0 5px;
+}
+input[type=number] {
+  width: 75px;
+}
+input[type=range] {
+  width: 100px;
+  margin: 0px 10px;
+}
+#fileinput {
+  width: 50%;
+  border: 1px dotted gray;
+}
+#about {
+  font-size: small;
+  font-style: italic;
+}
+.layerGroup {
+  display:inline-block;
+  height: 350px;
+  width: max(30%, 350px);
+  margin: 5px 5px 5px 0;
+  background-color: limeGreen;
+  /* allow child centering */
+  position: relative;
+}
+.layer {
+  /* needed for overlay */
+  position: absolute;
+  /* center */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+canvas {
+  /* avoid parent auto-resize */
+  vertical-align: middle;
+}
+.line {
+  padding: 5px;
+  background-color: #E8E8E8;
+}
+/** tooltip */
+.layerGroup span {
+  display: none;
+  background-color: palegreen;
+  padding: 2px;
+}
+.layerGroup:hover span {
+  display: inline-block;
+  position: absolute;
+  overflow: hidden;
+}
+/** crossshair */
+.layerGroup hr {
+  pointer-events: none;
+  border: none;
+  position: absolute;
+  margin: 0;
+}
+hr.horizontal {
+  border-top: 2px dashed lime;
+}
+hr.vertical {
+  border-top: 2px dashed lime;
+  transform-origin: left;
+  transform: rotate(90deg);
+}
+.visualizer{
+  size: 4000px;
+  display: grid;
+}
+</style>
+
+<!-- dwv build --><!--
+<script type="text/javascript" src="./node_modules/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="./node_modules/konva/konva.min.js"></script>
+<script type="text/javascript" src="./dist/dwv.min.js"></script>
+--><!-- local -->
+<script type="text/javascript" src="./viewer.js"></script>
+
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="line">
+    <label for="fileinput">Input:</label>
+    <input type="file" id="fileinput" multiple>
+    <progress id="loadprogress" max="100" value="0"></progress>
+    </div>
+    
+    <!-- DWV -->
+    <div class="visualizer" id="dwv"></div>
+    
+    <div class="line">
+    <label for="position">Position:</label>
+    <input type="text" id="position" autocomplete="off" >
+    <span id="positionspan"></span>
+    </div>
+    
+    <div class="line">
+    <label for="changelayout">Layout:</label>
+    <select name="layout" id="changelayout" autocomplete="off" disabled>
+     <option value="one">One</option>
+     <option value="side">Side by side</option>
+     <option value="mpr">MPR</option>
+    </select>
+    <button id="resetlayout" disabled>Reset views</button>
+    <input type="checkbox" id="changesmoothing">
+    <label for="changesmoothing">Smoothing</label>
+    </div>
+    
+    <div hidden class="line" id="binders">Binders:</div>
+    
+    <div class="line" id="tools">Tools:</div>
+    
+    <div id="layersdetails"></div>
+    
+    <div hidden class="line" id="tests">Tests:</div>
+    
+    <div hidden class="line" id="about">About: </div>
+    
+  </div>
+
+
+</body>
+</html>
