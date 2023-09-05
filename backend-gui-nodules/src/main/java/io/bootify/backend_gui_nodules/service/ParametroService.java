@@ -31,6 +31,7 @@ public class ParametroService {
             Parametro parametro = repository.findById(id).get();
 
             ParametroDTO parametroDTO = new ParametroDTO();
+            parametroDTO.setId(parametro.getId());
             parametroDTO.setParametro(parametro.getParametro());
             parametroDTO.setValor(parametro.getValor());
             parametroDTO.setUsuarioModifica(parametro.getUsuarioModifica().getId());
@@ -60,6 +61,7 @@ public class ParametroService {
             List<ParametroDTO> respuestaObj = new ArrayList<>();
             for (Parametro parametro : coldatos) {
                 ParametroDTO parametroDTO = new ParametroDTO();
+                parametroDTO.setId(parametro.getId());
                 parametroDTO.setParametro(parametro.getParametro());
                 parametroDTO.setValor(parametro.getValor());
                 parametroDTO.setUsuarioModifica(parametro.getUsuarioModifica().getId());

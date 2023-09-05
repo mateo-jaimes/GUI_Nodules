@@ -6,6 +6,7 @@ import java.time.OffsetDateTime;
 @Data
 public class ParametroDTO {
 
+    private Integer id;
     private String parametro;
     private String valor;
     private Integer usuarioModifica;

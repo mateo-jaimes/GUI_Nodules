@@ -30,25 +30,26 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin():void{
-    this.loginUsuario.name=this.nombreUsuario;
-    this.loginUsuario.pass=this.password;
-    this.authService.login(this.loginUsuario).subscribe({
-      next:data => {
-        this.isLogged = true;
-        this.isLoginFail = false;
+    this.router.navigate(['usuario/listar']);
+    // this.loginUsuario.name=this.nombreUsuario;
+    // this.loginUsuario.pass=this.password;
+    // this.authService.login(this.loginUsuario).subscribe({
+    //   next:data => {
+    //     this.isLogged = true;
+    //     this.isLoginFail = false;
 
-        this.tokenService.setToken(String(data.token));
-        this.tokenService.setUserName(String(data.nombreUsuario));
-        this.tokenService.setAuthorities(data.authorities);
-        this.roles = data.authorities;
-        this.router.navigate(['candidato/listar']);
-      },
-      error:(err) => {
-        this.isLogged = false;
-        this.isLoginFail = true;
-        this.errMsj = err.message;
-        console.log(this.errMsj);
-      }
-    });
+    //     this.tokenService.setToken(String(data.token));
+    //     this.tokenService.setUserName(String(data.nombreUsuario));
+    //     this.tokenService.setAuthorities(data.authorities);
+    //     this.roles = data.authorities;
+    //     this.router.navigate(['candidato/listar']);
+    //   },
+    //   error:(err) => {
+    //     this.isLogged = false;
+    //     this.isLoginFail = true;
+    //     this.errMsj = err.message;
+    //     console.log(this.errMsj);
+    //   }
+    // });
   }
 }

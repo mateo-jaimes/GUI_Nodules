@@ -1,1 +1,29 @@
-<p>list-parametro works!</p>
+<app-menu></app-menu>
+<div class="wrapper" style="width: 70%; margin-left: auto; margin-right: auto;">
+    <h4  class="mb-4 col-md-12 col-sm-12 col-12 text-center col-light"   > Parametros</h4>
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Parametro</th>
+                    <th>Valor</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let parametro of parametros">
+                    <td>{{parametro.id}}</td>
+                    <td>{{parametro.parametro}}</td>
+                    <td>{{parametro.valor}}</td>
+                    <td><button class="btn btn-outline-warning" routerLink="/parametros/editar/{{parametro.id}}"><i class="fa-solid fa-pen"></i></button></td>
+                    <td><button class="btn btn-outline-danger" (click)="borrar(parametro)"><i class="fa-solid fa-trash-can"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mx-auto" style="width: 200px;">
+        <button type="button" class="btn btn-success"  [routerLink]="['/parametros/crear']">Crear Parametro</button>
+      </div>
+</div>

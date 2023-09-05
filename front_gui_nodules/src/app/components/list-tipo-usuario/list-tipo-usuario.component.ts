@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TipoUsuarioService } from 'src/app/services/tipo-usuario.service';
 
 @Component({
   selector: 'app-list-tipo-usuario',
@@ -7,9 +8,39 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ListTipoUsuarioComponent implements OnInit {
 
-  constructor() { }
+  
+  constructor(private tipoUsuarioService:TipoUsuarioService) { }
+
+  tipoUsuarios:any[] = [];
 
   ngOnInit(): void {
+    this.getTipoUsuarios();
+  }
+
+  getTipoUsuarios(){
+    this.tipoUsuarioService.lista().subscribe({
+      next:(res:any)=>{
+        if(res.exitosa){
+          this.tipoUsuarios=res.objeto;
+          console.log(this.tipoUsuarios);
+        }
+      },
+      error:err=>{
+        console.log(err);
+      }
+    })
+  }
+
+
+  borrar(tipoUser:any){
+    this.tipoUsuarioService.delete(tipoUser.id,tipoUser).subscribe({
+      next:res=>{
+        this.ngOnInit();
+      },
+      error:err=>{
+        console.log(err);
+      }
+    })
   }
 
 }

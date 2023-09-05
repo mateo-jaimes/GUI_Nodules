@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { TipoUsuarioService } from 'src/app/services/tipo-usuario.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-tipo-usuario',
@@ -7,9 +11,87 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateTipoUsuarioComponent implements OnInit {
 
-  constructor() { }
+  
+  tipoUsuarioForm: FormGroup;
+
+  tipoUsuarioId:string = '';
+  edit:boolean = false;
+  tipoUserEdit:any={};
+  tipoUsaurioList:any=[];
+
+  constructor(public fb: FormBuilder, private activatedRoute: ActivatedRoute, private tipoUsuarioService: TipoUsuarioService) { 
+    this.tipoUsuarioForm = this.fb.group({
+      rol: ['',[Validators.required]],
+    });
+  }
 
   ngOnInit(): void {
+    const params = this.activatedRoute.snapshot.params;
+    this.tipoUsuarioId = params['id'];
+    if(this.tipoUsuarioId !== undefined){
+      this.edit=true;
+      this.getTipoUsuarioEdit()
+    } 
+  }
+
+  getTipoUsuarioEdit(){
+    this.tipoUsuarioService.getById(this.tipoUsuarioId).subscribe({
+      next:res=>{
+        console.log(res);
+        this.tipoUserEdit=res.objeto;
+        this.fillForm();
+      },
+      error:err=>{
+        console.log(err);
+      }
+    })
+  }
+
+  fillForm(){
+    this.tipoUsuarioForm.get('rol')!.setValue(this.tipoUserEdit.rol);
+  }
+
+
+  onCreate(){
+      this.tipoUsuarioService.create(this.tipoUsuarioForm.value).subscribe({
+        next:res=>{
+          Swal.fire({
+            title: 'Creación Exitosa',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+          });
+          this.irAtras();
+        },
+        error:err=>{
+          Swal.fire({
+            title: 'Error',
+            text: err.message,
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          })
+        },
+      })
+  }
+
+  onEdit(){
+    this.tipoUserEdit.rol = this.tipoUsuarioForm.value.rol
+      this.tipoUsuarioService.update(this.tipoUserEdit).subscribe({
+        next:res=>{
+          Swal.fire({
+            title: 'Edición Exitosa',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+          });
+          this.irAtras();
+        },
+        error:err=>{
+
+        },
+      })
+  }
+
+  irAtras(){
+    window.history.back();
   }
 
 }
