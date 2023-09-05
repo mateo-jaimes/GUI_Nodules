@@ -46,7 +46,7 @@ public class UsuarioService {
             usuarioDTO.setTelefono(usuario.getTelefono());
             usuarioDTO.setDateCreated(usuario.getDateCreated());
             usuarioDTO.setLastUpdated(usuario.getLastUpdated());
-
+            System.out.println(usuarioDTO);
             respuesta.setObjeto(usuarioDTO);
             respuesta.setExitosa(true);
             respuesta.setDescripcionRespuesta("Transacción exitosa.");
@@ -69,6 +69,7 @@ public class UsuarioService {
             List<Usuario> coldatos = repository.findAll();
             List<UsuarioDTO> respuestaObj = new ArrayList<>();
             for (Usuario usuario : coldatos) {
+                System.out.println((usuario.getTipoUsuario().getId()));
                 UsuarioDTO usuarioDTO = new UsuarioDTO();
                 usuarioDTO.setId(usuario.getId());
                 usuarioDTO.setTipoUsuario(usuario.getTipoUsuario().getId());

@@ -1,1 +1,27 @@
-<p>list-tipo-usuario works!</p>
+<app-menu></app-menu>
+<div class="wrapper" style="width: 70%; margin-left: auto; margin-right: auto;">
+    <h4  class="mb-4 col-md-12 col-sm-12 col-12 text-center col-light"   > Tipo Usuarios</h4>
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Rol</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let tipo of tipoUsuarios">
+                    <td>{{tipo.id}}</td>
+                    <td>{{tipo.rol}}</td>
+                    <td><button class="btn btn-outline-warning" routerLink="/tipoUsuarios/editar/{{tipo.id}}"><i class="fa-solid fa-pen"></i></button></td>
+                    <td><button class="btn btn-outline-danger" (click)="borrar(tipo)"><i class="fa-solid fa-trash-can"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mx-auto" style="width: 200px;">
+        <button type="button" class="btn btn-success"  [routerLink]="['/tipoUsuarios/crear']">Crear Tipo Usuario</button>
+      </div>
+</div>

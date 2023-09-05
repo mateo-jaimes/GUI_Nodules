@@ -33,6 +33,7 @@ public class ImagenTacService {
             ImagenTacDTO imagentacDTO = new ImagenTacDTO();
             imagentacDTO.setId(imagentac.getId());
             imagentacDTO.setIdentificador(imagentac.getIdentificador());
+            imagentacDTO.set(imagentac.getIdentificador());
             imagentacDTO.setDateCreated(imagentac.getDateCreated());
             imagentacDTO.setLastUpdated(imagentac.getLastUpdated());
             respuesta.setObjeto(imagentacDTO);

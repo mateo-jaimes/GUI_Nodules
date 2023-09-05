@@ -1,6 +1,7 @@
 package io.bootify.backend_gui_nodules.service;
 
 import io.bootify.backend_gui_nodules.dto.TipoUsuarioDTO;
+import io.bootify.backend_gui_nodules.dto.UsuarioDTO;
 import io.bootify.backend_gui_nodules.entity.Tipousuario;
 import io.bootify.backend_gui_nodules.repository.TipousuarioRepository;
 import io.bootify.backend_gui_nodules.vo.RespuestaServicioVO;
@@ -27,11 +28,13 @@ public class TipoUsuarioService {
     public RespuestaServicioVO getById(Integer id) {
         RespuestaServicioVO respuesta = new RespuestaServicioVO();
         try {
-            Tipousuario tipousuario = repository.findById(id).orElse(null);
-            if (tipousuario != null) {
-                Hibernate.initialize(tipousuario.getTipoUsuarioUsuarios());
-            }
-            respuesta.setObjeto(tipousuario);
+            Tipousuario tipousuario = repository.findById(id).get();
+            TipoUsuarioDTO tipoUsuarioDTO = new TipoUsuarioDTO();
+            tipoUsuarioDTO.setId(tipousuario.getId());
+            tipoUsuarioDTO.setRol(tipousuario.getRol());
+            tipoUsuarioDTO.setLastUpdated(tipousuario.getLastUpdated());
+            tipoUsuarioDTO.setDateCreated(tipousuario.getDateCreated());
+            respuesta.setObjeto(tipoUsuarioDTO);
             respuesta.setExitosa(true);
             respuesta.setDescripcionRespuesta("Transacción exitosa.");
         } catch (DataAccessException e) {
