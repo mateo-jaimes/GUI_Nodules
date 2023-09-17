@@ -54,7 +54,7 @@ input[type=range] {
   height: 350px;
   width: max(30%, 350px);
   margin: 5px 5px 5px 0;
-  background-color: limeGreen;
+  background-color: black;
   /* allow child centering */
   position: relative;
 }
@@ -103,6 +103,14 @@ hr.vertical {
 .visualizer{
   size: 4000px;
   display: grid;
+}
+.table-container {
+    max-height: 300px; /* Ajusta la altura máxima según tus necesidades */
+    overflow-y: scroll; /* Añade una barra de desplazamiento vertical cuando sea necesario */
+}
+.Process_btn {
+    font-size: 20px; /* Ajusta el tamaño de la fuente del texto */
+    padding: 10px 20px; /* Ajusta el relleno (padding) para aumentar el tamaño */
 }
 </style>
 
@@ -155,6 +163,21 @@ hr.vertical {
     
     <div hidden class="line" id="about">About: </div>
     
+  </div>
+  <div class="table_visualizer">
+    <table>
+      <thead>
+          <tr>
+              <th>ID</th>
+              <th>X</th>
+              <th>Y</th>
+              <th>Z</th>
+          </tr>
+      </thead>
+      <tbody>          
+      </tbody>
+  </table>
+  <button id="btn_process" type="submit" onclick="procces()" class="Process_btn">Process</button>
   </div>
 
 

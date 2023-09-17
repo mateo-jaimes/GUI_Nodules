@@ -64,8 +64,8 @@ export class RectangleFactory {
     const kshape = new Konva.Rect({
       x: rectangle.getBegin().getX(),
       y: rectangle.getBegin().getY(),
-      width: rectangle.getWidth(),
-      height: rectangle.getHeight(),
+      width: 1,
+      height: 1,
       stroke: style.getLineColour(),
       strokeWidth: style.getStrokeWidth(),
       strokeScaleEnabled: false,

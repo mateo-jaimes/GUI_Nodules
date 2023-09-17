@@ -1,11 +1,16 @@
 // Do not warn if these variables were not defined before.
 /* global dwv */
 
+
+
 // call setup on DOM loaded
 document.addEventListener('DOMContentLoaded', onDOMContentLoaded);
 
 let _app = null;
 let _tools = null;
+let coordinates = [];
+
+
 
 // viewer options
 let _layout = 'one';
@@ -14,10 +19,23 @@ const _dicomWeb = false;
 /**
  * Setup simple dwv app.
  */
+function procces(){
+
+  if (coordinates.length > 0) {
+    coordinates.forEach(coord => {
+        callPythonProgam('python', ['C:/Users/santi/Desktop/U-SANTI/Semestre 8/Proyecto de grado/process.py', coord[0], coord[1], coord[2]])
+    });
+  }
+}
+
+
+function callPythonProgam(command,args){
+  return exec(command+' '+args.join(' '));
+}
+
 function viewerSetup() {
   // logger level (optional)
   dwv.logger.level = dwv.logger.levels.INFO;
-
   dwv.decoderScripts.jpeg2000 =
     '../../decoders/pdfjs/decode-jpeg2000.js';
   dwv.decoderScripts['jpeg-lossless'] =
@@ -218,8 +236,40 @@ function viewerSetup() {
     input.value = values.map(getPrecisionRound(2));
     // index as small text
     const span = document.getElementById('positionspan');
+    
+    //Keep postion on cordinates
+    
+    coordinates.push(event.value[1])
+    console.log(coordinates)
     span.innerHTML = text;
+    const coordinatesTable = document.querySelector('.table_visualizer table tbody');
+
+    // Limpiar la tabla antes de agregar nuevos datos
+    coordinatesTable.innerHTML = '';
+    let id = 1;
+    coordinates.forEach(coord => {
+        const newRow = document.createElement('tr');
+        const idCell = document.createElement('td');
+        const xCell = document.createElement('td');
+        const yCell = document.createElement('td');
+        const zCell = document.createElement('td');
+
+        idCell.textContent = id++;
+        xCell.textContent = coord[0];
+        yCell.textContent = coord[1];
+        zCell.textContent = coord[2];
+
+        newRow.appendChild(idCell);
+        newRow.appendChild(xCell);
+        newRow.appendChild(yCell);
+        newRow.appendChild(zCell);
+
+        coordinatesTable.appendChild(newRow);
+    });
   });
+
+  
+
 
   // default keyboard shortcuts
   window.addEventListener('keydown', function (event) {
