@@ -23,6 +23,7 @@
     ">1%, last 2 versions, not dead"
   ],
   "dependencies": {
+    "child_process": "^1.0.2",
     "jszip": "~3.10.1",
     "konva": "~8.4.2",
     "magic-wand-tool": "~1.1.7"

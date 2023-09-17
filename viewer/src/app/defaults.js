@@ -29,7 +29,7 @@ export const defaults = {
       '*': '{angle}'
     },
     rectangle: {
-      '*': '{surface}'
+      '*': ''
     },
     roi: {
       '*': ''
