@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RegistroService } from 'src/app/services/registro.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-list-registro',
@@ -21,25 +22,33 @@ export class ListRegistroComponent implements OnInit {
   getTipoRegistros(){
     this.registroService.lista().subscribe({
       next:(res:any)=>{
-        if(res.exitosa){
-          this.registros=res.objeto;
-          console.log(this.registros);
-        }
+        console.log(res);
+        this.registros=res;
       },
       error:err=>{
-        console.log(err);
+        Swal.fire({
+          title: 'Error',
+          text:err.error.exception,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
       }
     })
   }
 
 
   borrar(tipoUser:any){
-    this.registroService.delete(tipoUser.id,tipoUser).subscribe({
+    this.registroService.delete(tipoUser.id).subscribe({
       next:res=>{
         this.ngOnInit();
       },
       error:err=>{
-        console.log(err);
+        Swal.fire({
+          title: 'Error',
+          text:err.error.exception,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
       }
     })
   }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-list-usuario',
@@ -20,24 +21,35 @@ export class ListUsuarioComponent implements OnInit {
   getUsers(){
     this.usuarioService.lista().subscribe({
       next:(res:any)=>{
-        if(res.exitosa){
-          this.users=res.objeto;
+        if(res){
+          this.users=res;
           console.log(this.users);
         }
       },
       error:err=>{
-
+        Swal.fire({
+          title: 'Error',
+          text:err.error.exception,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
       }
     })
   }
 
 
   borrar(user:any){
-    this.usuarioService.delete(user.nombreUsuario,user).subscribe({
+    this.usuarioService.delete(user.id).subscribe({
       next:res=>{
         this.ngOnInit();
       },
       error:err=>{
+        Swal.fire({
+          title: 'Error',
+          text:err.error.exception,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
         console.log(err);
       }
     })

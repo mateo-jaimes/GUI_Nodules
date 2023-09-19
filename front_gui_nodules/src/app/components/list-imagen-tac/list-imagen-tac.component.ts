@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ImagenTacService } from 'src/app/services/imagen-tac.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-list-imagen-tac',
@@ -20,25 +21,32 @@ export class ListImagenTacComponent implements OnInit {
   getTipoRegistros(){
     this.imagenTacService.lista().subscribe({
       next:(res:any)=>{
-        if(res.exitosa){
-          this.imagenesTac=res.objeto;
-          console.log(this.imagenesTac);
-        }
+        this.imagenesTac=res;
       },
       error:err=>{
-        console.log(err);
+        Swal.fire({
+          title: 'Error',
+          text:err.error.exception,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
       }
     })
   }
 
 
   borrar(tipoUser:any){
-    this.imagenTacService.delete(tipoUser.id,tipoUser).subscribe({
+    this.imagenTacService.delete(tipoUser.id).subscribe({
       next:res=>{
         this.ngOnInit();
       },
       error:err=>{
-        console.log(err);
+        Swal.fire({
+          title: 'Error',
+          text:err.error.exception,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
       }
     })
   }

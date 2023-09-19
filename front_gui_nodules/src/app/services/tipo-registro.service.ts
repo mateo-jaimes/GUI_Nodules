@@ -8,26 +8,24 @@ import { environment } from 'src/environments/environment';
 })
 export class TipoRegistroService {
 
-  authUrl = environment.authUrl+'TipoRegistro/';
+  authUrl = environment.authUrl+'api/tipoRegistros';
 
   constructor(private httpClient:HttpClient) { }
 
   public lista(): Observable<any[]>{
-    return this.httpClient.get<any[]>(this.authUrl + 'getAll');
+    return this.httpClient.get<any[]>(this.authUrl);
   }
-  public delete(id : string, tipoRegistro: any): Observable<any>{
-    return this.httpClient.put<any>(this.authUrl + `delete/${id}`, tipoRegistro);
+  public delete(id : string): Observable<any>{
+    return this.httpClient.delete<any>(this.authUrl + `/${id}`);
   }
   public getById(id: string): Observable<any>{
-    let api = `${this.authUrl}getById`
-    let params = new HttpParams();
-    params = params.append('id', id);
-    return this.httpClient.get(api,{params: params});
+    let api = `${this.authUrl}/${id}`
+    return this.httpClient.get(api);
   }
-  public update(tipoRegistro: any): Observable<any>{
-    return this.httpClient.post<any>(this.authUrl + `update`, tipoRegistro);
+  public update(tipoRegistro: any,id:string): Observable<any>{
+    return this.httpClient.put<any>(`${this.authUrl}/${id}`, tipoRegistro);
   }
   public create(tipoRegistro: any): Observable<any>{
-    return this.httpClient.post<any>(this.authUrl + 'create',tipoRegistro);
+    return this.httpClient.post<any>(this.authUrl,tipoRegistro);
   }
 }

@@ -8,26 +8,24 @@ import { environment } from 'src/environments/environment';
 })
 export class UsuarioService {
 
-  authUrl = environment.authUrl+'Usuario/';
+  authUrl = environment.authUrl+'api/usuarios';
 
   constructor(private httpClient:HttpClient) { }
 
   public lista(): Observable<any[]>{
-    return this.httpClient.get<any[]>(this.authUrl + 'getAll');
+    return this.httpClient.get<any[]>(this.authUrl);
   }
-  public delete(userId : string, usuario: any): Observable<any>{
-    return this.httpClient.put<any>(this.authUrl + `delete/${userId}`, usuario);
+  public delete(userId : string): Observable<any>{
+    return this.httpClient.delete<any>(this.authUrl + `/${userId}`);
   }
   public getById(userId: string): Observable<any>{
-    let api = `${this.authUrl}getById`
-    let params = new HttpParams();
-    params = params.append('id', userId);
-    return this.httpClient.get(api,{params: params});
+    let api = `${this.authUrl}/${userId}`
+    return this.httpClient.get(api);
   }
   public update(userId : string, usuario: any): Observable<any>{
-    return this.httpClient.put<any>(this.authUrl + `update/${userId}`, usuario);
+    return this.httpClient.put<any>(this.authUrl + `/${userId}`, usuario);
   }
   public create(nuevoUsuario: any): Observable<any>{
-    return this.httpClient.post<any>(this.authUrl + 'create',nuevoUsuario);
+    return this.httpClient.post<any>(this.authUrl,nuevoUsuario);
   }
 }

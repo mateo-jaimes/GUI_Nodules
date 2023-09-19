@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ParametroService } from 'src/app/services/parametro.service';
 import Swal from 'sweetalert2';
 
@@ -18,7 +18,7 @@ export class CreateParametroComponent implements OnInit {
   edit:boolean = false;
   parametroEdit:any={};
 
-  constructor(public fb: FormBuilder, private activatedRoute: ActivatedRoute, private parametroService: ParametroService) { 
+  constructor(private router:Router, public fb: FormBuilder, private activatedRoute: ActivatedRoute, private parametroService: ParametroService) { 
     this.parametroForm = this.fb.group({
       parametro: ['',[Validators.required]],
       valor: ['',[Validators.required]],
@@ -38,13 +38,17 @@ export class CreateParametroComponent implements OnInit {
   getParametroEdit(){
     this.parametroService.getById(this.parametroId).subscribe({
       next:res=>{
-        console.log(res);
-        this.parametroEdit=res.objeto;
+        this.parametroEdit=res;
         this.fillForm();
       },
       error:err=>{
-        console.log(err);
-      }
+        Swal.fire({
+          title: 'Error',
+          text:err.error.exception,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+      },
     })
   }
 
@@ -61,8 +65,9 @@ export class CreateParametroComponent implements OnInit {
             title: 'Creación Exitosa',
             icon: 'success',
             confirmButtonText: 'Aceptar',
-          });
-          this.irAtras();
+          }).then(() => {
+            this.router.navigate(['parametros/listar']);
+          })
         },
         error:err=>{
           Swal.fire({
@@ -76,19 +81,23 @@ export class CreateParametroComponent implements OnInit {
   }
 
   onEdit(){
-    this.parametroEdit.parametro = this.parametroForm.value.parametro;
-    this.parametroEdit.valor = this.parametroForm.value.valor;
-      this.parametroService.update(this.parametroEdit).subscribe({
+      this.parametroService.update(this.parametroId,this.parametroForm.value).subscribe({
         next:res=>{
           Swal.fire({
             title: 'Edición Exitosa',
             icon: 'success',
             confirmButtonText: 'Aceptar',
-          });
-          this.irAtras();
+          }).then(() => {
+            this.router.navigate(['parametros/listar']);
+          })
         },
         error:err=>{
-
+          Swal.fire({
+            title: 'Error',
+            text:err.error.exception,
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          });
         },
       })
   }
