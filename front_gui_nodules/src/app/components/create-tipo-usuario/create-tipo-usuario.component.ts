@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TipoUsuarioService } from 'src/app/services/tipo-usuario.service';
 import Swal from 'sweetalert2';
 
@@ -19,7 +19,7 @@ export class CreateTipoUsuarioComponent implements OnInit {
   tipoUserEdit:any={};
   tipoUsaurioList:any=[];
 
-  constructor(public fb: FormBuilder, private activatedRoute: ActivatedRoute, private tipoUsuarioService: TipoUsuarioService) { 
+  constructor(private router:Router, public fb: FormBuilder, private activatedRoute: ActivatedRoute, private tipoUsuarioService: TipoUsuarioService) { 
     this.tipoUsuarioForm = this.fb.group({
       rol: ['',[Validators.required]],
     });
@@ -37,8 +37,7 @@ export class CreateTipoUsuarioComponent implements OnInit {
   getTipoUsuarioEdit(){
     this.tipoUsuarioService.getById(this.tipoUsuarioId).subscribe({
       next:res=>{
-        console.log(res);
-        this.tipoUserEdit=res.objeto;
+        this.tipoUserEdit=res;
         this.fillForm();
       },
       error:err=>{
@@ -59,8 +58,9 @@ export class CreateTipoUsuarioComponent implements OnInit {
             title: 'Creación Exitosa',
             icon: 'success',
             confirmButtonText: 'Aceptar',
-          });
-          this.irAtras();
+          }).then(() => {
+            this.router.navigate(['tipoUsuarios/listar']);
+          })
         },
         error:err=>{
           Swal.fire({
@@ -74,15 +74,16 @@ export class CreateTipoUsuarioComponent implements OnInit {
   }
 
   onEdit(){
-    this.tipoUserEdit.rol = this.tipoUsuarioForm.value.rol
-      this.tipoUsuarioService.update(this.tipoUserEdit).subscribe({
+      this.tipoUsuarioService.update(this.tipoUsuarioForm.value,this.tipoUsuarioId).subscribe({
         next:res=>{
           Swal.fire({
             title: 'Edición Exitosa',
             icon: 'success',
             confirmButtonText: 'Aceptar',
-          });
-          this.irAtras();
+          }).then(() => {
+            this.router.navigate(['tipoUsuarios/listar']);
+          })
+
         },
         error:err=>{
 
@@ -93,5 +94,7 @@ export class CreateTipoUsuarioComponent implements OnInit {
   irAtras(){
     window.history.back();
   }
+
+  
 
 }

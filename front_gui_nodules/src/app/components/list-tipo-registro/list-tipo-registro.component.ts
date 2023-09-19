@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TipoRegistroService } from 'src/app/services/tipo-registro.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-list-tipo-registro',
@@ -20,25 +21,32 @@ export class ListTipoRegistroComponent implements OnInit {
   getTipoRegistros(){
     this.tipoRegistroService.lista().subscribe({
       next:(res:any)=>{
-        if(res.exitosa){
-          this.tipoRegistro=res.objeto;
-          console.log(this.tipoRegistro);
-        }
+        this.tipoRegistro=res;
       },
       error:err=>{
-        console.log(err);
+        Swal.fire({
+          title: 'Error',
+          text:err.error.exception,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
       }
     })
   }
 
 
   borrar(tipoUser:any){
-    this.tipoRegistroService.delete(tipoUser.id,tipoUser).subscribe({
+    this.tipoRegistroService.delete(tipoUser.id).subscribe({
       next:res=>{
         this.ngOnInit();
       },
       error:err=>{
-        console.log(err);
+        Swal.fire({
+          title: 'Error',
+          text:err.error.exception,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
       }
     })
   }

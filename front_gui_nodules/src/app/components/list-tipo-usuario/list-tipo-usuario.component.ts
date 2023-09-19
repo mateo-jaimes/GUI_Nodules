@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TipoUsuarioService } from 'src/app/services/tipo-usuario.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-list-tipo-usuario',
@@ -20,25 +21,32 @@ export class ListTipoUsuarioComponent implements OnInit {
   getTipoUsuarios(){
     this.tipoUsuarioService.lista().subscribe({
       next:(res:any)=>{
-        if(res.exitosa){
-          this.tipoUsuarios=res.objeto;
-          console.log(this.tipoUsuarios);
-        }
+        this.tipoUsuarios=res;
       },
       error:err=>{
-        console.log(err);
+        Swal.fire({
+          title: 'Error',
+          text:err.error.exception,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
       }
     })
   }
 
 
   borrar(tipoUser:any){
-    this.tipoUsuarioService.delete(tipoUser.id,tipoUser).subscribe({
+    this.tipoUsuarioService.delete(tipoUser.id).subscribe({
       next:res=>{
         this.ngOnInit();
       },
       error:err=>{
-        console.log(err);
+        Swal.fire({
+          title: 'Error',
+          text:err.error.exception,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
       }
     })
   }

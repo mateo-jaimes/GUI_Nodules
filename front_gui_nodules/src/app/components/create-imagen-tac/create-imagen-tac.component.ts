@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ImagenTacService } from 'src/app/services/imagen-tac.service';
 import Swal from 'sweetalert2';
 
@@ -18,7 +18,7 @@ export class CreateImagenTacComponent implements OnInit {
   edit:boolean = false;
   imagenTacEdit:any={};
 
-  constructor(public fb: FormBuilder, private activatedRoute: ActivatedRoute, private imagenTacService: ImagenTacService) { 
+  constructor(private router:Router, public fb: FormBuilder, private activatedRoute: ActivatedRoute, private imagenTacService: ImagenTacService) { 
     this.imagenTacForm = this.fb.group({
       identificador: ['',[Validators.required]],
     });
@@ -36,13 +36,17 @@ export class CreateImagenTacComponent implements OnInit {
   getImagenTacEdit(){
     this.imagenTacService.getById(this.imagenTacId).subscribe({
       next:res=>{
-        console.log(res);
-        this.imagenTacEdit=res.objeto;
+        this.imagenTacEdit=res;
         this.fillForm();
       },
       error:err=>{
-        console.log(err);
-      }
+        Swal.fire({
+          title: 'Error',
+          text:err.error.exception,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+      },
     })
   }
 
@@ -58,8 +62,9 @@ export class CreateImagenTacComponent implements OnInit {
             title: 'Creación Exitosa',
             icon: 'success',
             confirmButtonText: 'Aceptar',
-          });
-          this.irAtras();
+          }).then(() => {
+            this.router.navigate(['imagenesTac/listar']);
+          })
         },
         error:err=>{
           Swal.fire({
@@ -74,17 +79,23 @@ export class CreateImagenTacComponent implements OnInit {
 
   onEdit(){
     this.imagenTacEdit.identificador = this.imagenTacForm.value.identificador
-      this.imagenTacService.update(this.imagenTacEdit).subscribe({
+      this.imagenTacService.update(this.imagenTacId,this.imagenTacEdit).subscribe({
         next:res=>{
           Swal.fire({
             title: 'Edición Exitosa',
             icon: 'success',
             confirmButtonText: 'Aceptar',
-          });
-          this.irAtras();
+          }).then(() => {
+            this.router.navigate(['imagenesTac/listar']);
+          })
         },
         error:err=>{
-
+          Swal.fire({
+            title: 'Error',
+            text:err.error.exception,
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          });
         },
       })
   }

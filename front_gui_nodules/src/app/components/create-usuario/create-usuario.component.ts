@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TipoUsuarioService } from 'src/app/services/tipo-usuario.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-usuario',
@@ -18,7 +19,7 @@ export class CreateUsuarioComponent implements OnInit {
   userEdit:any={};
   tipoUsaurioList:any=[];
 
-  constructor(public fb: FormBuilder, private activatedRoute: ActivatedRoute, private usuarioService: UsuarioService, private tipoUsuarioServie:TipoUsuarioService) { 
+  constructor(private router:Router, public fb: FormBuilder, private activatedRoute: ActivatedRoute, private usuarioService: UsuarioService, private tipoUsuarioServie:TipoUsuarioService) { 
     this.userForm = this.fb.group({
       nombre: ['',[Validators.required]],
       apellido: ['',[Validators.required]],
@@ -26,7 +27,7 @@ export class CreateUsuarioComponent implements OnInit {
       telefono: ['',[Validators.required]],
       pass: ['',[Validators.required]],
       email: ['',[Validators.required]],
-      tipo_usuario: ['',[Validators.required]],
+      tipoUsuario: ['',[Validators.required]],
     });
   }
 
@@ -44,7 +45,7 @@ export class CreateUsuarioComponent implements OnInit {
     this.tipoUsuarioServie.lista().subscribe({
       next:(res:any)=>{
         console.log(res);
-        this.tipoUsaurioList=res.objeto;
+        this.tipoUsaurioList=res;
       },
       error:error=>{
         console.log(error);
@@ -56,7 +57,7 @@ export class CreateUsuarioComponent implements OnInit {
     this.usuarioService.getById(this.userId).subscribe({
       next:res=>{
         console.log(res);
-        this.userEdit=res.objeto;
+        this.userEdit=res;
         this.fillForm();
       },
       error:err=>{
@@ -72,14 +73,21 @@ export class CreateUsuarioComponent implements OnInit {
     this.userForm.get('telefono')!.setValue(this.userEdit.telefono);
     this.userForm.get('pass')!.setValue(this.userEdit.pass);
     this.userForm.get('username')!.setValue(this.userEdit.username);
-    this.userForm.get('tipo_usuario')!.setValue(this.userEdit.tipoUsuario);
+    this.userForm.get('tipoUsuario')!.setValue(this.userEdit.tipoUsuario);
   }
 
 
   onCreate(){
+    console.log(this.userForm.value);
       this.usuarioService.create(this.userForm.value).subscribe({
         next:res=>{
-          console.log(res);
+          Swal.fire({
+            title: 'Creación Exitosa',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+          }).then(() => {
+            this.router.navigate(['usuario/listar']);
+          })
         },
         error:err=>{
 
@@ -88,15 +96,20 @@ export class CreateUsuarioComponent implements OnInit {
   }
 
   onEdit(){
-    let usuario:any={};
-      this.usuarioService.update(this.userId,usuario).subscribe({
-        next:res=>{
+    this.usuarioService.update(this.userId,this.userForm.value).subscribe({
+      next:res=>{
+        Swal.fire({
+          title: 'Edició Exitosa',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        }).then(() => {
+          this.router.navigate(['usuario/listar']);
+        })
+      },
+      error:err=>{
 
-        },
-        error:err=>{
-
-        },
-      })
+      },
+    })
   }
 
   irAtras(){

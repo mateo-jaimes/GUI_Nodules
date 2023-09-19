@@ -8,26 +8,24 @@ import { environment } from 'src/environments/environment';
 })
 export class ImagenTacService {
 
-  authUrl = environment.authUrl+'ImagenTac/';
+  authUrl = environment.authUrl+'api/imagenTacs';
 
   constructor(private httpClient:HttpClient) { }
 
   public lista(): Observable<any[]>{
-    return this.httpClient.get<any[]>(this.authUrl + 'getAll');
+    return this.httpClient.get<any[]>(this.authUrl);
   }
-  public delete(id : string, ImagenTac: any): Observable<any>{
-    return this.httpClient.put<any>(this.authUrl + `delete/${id}`, ImagenTac);
+  public delete(id : string): Observable<any>{
+    return this.httpClient.delete<any>(this.authUrl + `/${id}`);
   }
   public getById(id: string): Observable<any>{
-    let api = `${this.authUrl}getById`
-    let params = new HttpParams();
-    params = params.append('id', id);
-    return this.httpClient.get(api,{params: params});
+    let api = `${this.authUrl}/${id}`
+    return this.httpClient.get(api);
   }
-  public update(ImagenTac: any): Observable<any>{
-    return this.httpClient.post<any>(this.authUrl + `update`, ImagenTac);
+  public update(id : string, ImagenTac: any): Observable<any>{
+    return this.httpClient.put<any>(`${this.authUrl}/${id}`, ImagenTac);
   }
   public create(ImagenTac: any): Observable<any>{
-    return this.httpClient.post<any>(this.authUrl + 'create',ImagenTac);
+    return this.httpClient.post<any>(this.authUrl,ImagenTac);
   }
 }

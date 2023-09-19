@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TipoRegistroService } from 'src/app/services/tipo-registro.service';
 import Swal from 'sweetalert2';
 
@@ -18,7 +18,7 @@ export class CreateTipoRegistroComponent implements OnInit {
   edit:boolean = false;
   tipoRegistroEdit:any={};
 
-  constructor(public fb: FormBuilder, private activatedRoute: ActivatedRoute, private tipoRegistroService: TipoRegistroService) { 
+  constructor(private router:Router, public fb: FormBuilder, private activatedRoute: ActivatedRoute, private tipoRegistroService: TipoRegistroService) { 
     this.tipoRegistroForm = this.fb.group({
       tipoRegistro: ['',[Validators.required]],
     });
@@ -36,12 +36,16 @@ export class CreateTipoRegistroComponent implements OnInit {
   getTipoRegistroEdit(){
     this.tipoRegistroService.getById(this.tipoRegistroId).subscribe({
       next:res=>{
-        console.log(res);
-        this.tipoRegistroEdit=res.objeto;
+        this.tipoRegistroEdit=res;
         this.fillForm();
       },
       error:err=>{
-        console.log(err);
+        Swal.fire({
+          title: 'Error',
+          text:err.error.exception,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
       }
     })
   }
@@ -58,8 +62,9 @@ export class CreateTipoRegistroComponent implements OnInit {
             title: 'Creación Exitosa',
             icon: 'success',
             confirmButtonText: 'Aceptar',
-          });
-          this.irAtras();
+          }).then(() => {
+            this.router.navigate(['tipoRegistros/listar']);
+          })
         },
         error:err=>{
           Swal.fire({
@@ -73,18 +78,23 @@ export class CreateTipoRegistroComponent implements OnInit {
   }
 
   onEdit(){
-    this.tipoRegistroEdit.tipoRegistro = this.tipoRegistroForm.value.tipoRegistro
-      this.tipoRegistroService.update(this.tipoRegistroEdit).subscribe({
+      this.tipoRegistroService.update(this.tipoRegistroForm.value,this.tipoRegistroId).subscribe({
         next:res=>{
           Swal.fire({
             title: 'Edición Exitosa',
             icon: 'success',
             confirmButtonText: 'Aceptar',
-          });
-          this.irAtras();
+          }).then(() => {
+            this.router.navigate(['tipoRegistros/listar']);
+          })
         },
         error:err=>{
-
+          Swal.fire({
+            title: 'Error',
+            text:err.error.exception,
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          });
         },
       })
   }
