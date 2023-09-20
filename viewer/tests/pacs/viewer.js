@@ -1,49 +1,33 @@
 // Do not warn if these variables were not defined before.
 /* global dwv */
 
-
-
 // call setup on DOM loaded
-document.addEventListener('DOMContentLoaded', onDOMContentLoaded);
+document.addEventListener("DOMContentLoaded", onDOMContentLoaded);
 
 let _app = null;
 let _tools = null;
 let coordinates = [];
 
-
-
 // viewer options
-let _layout = 'one';
+let _layout = "one";
 const _dicomWeb = false;
 
 /**
  * Setup simple dwv app.
  */
-function procces(){
-
-  if (coordinates.length > 0) {
-    coordinates.forEach(coord => {
-        callPythonProgam('python', ['C:/Users/santi/Desktop/U-SANTI/Semestre 8/Proyecto de grado/process.py', coord[0], coord[1], coord[2]])
-    });
-  }
-}
-
-
-function callPythonProgam(command,args){
-  return exec(command+' '+args.join(' '));
+function procces() {
+  _app.printImage(coordinates);
 }
 
 function viewerSetup() {
   // logger level (optional)
   dwv.logger.level = dwv.logger.levels.INFO;
-  dwv.decoderScripts.jpeg2000 =
-    '../../decoders/pdfjs/decode-jpeg2000.js';
-  dwv.decoderScripts['jpeg-lossless'] =
-    '../../decoders/rii-mango/decode-jpegloss.js';
-  dwv.decoderScripts['jpeg-baseline'] =
-    '../../decoders/pdfjs/decode-jpegbaseline.js';
-  dwv.decoderScripts.rle =
-    '../../decoders/dwv/decode-rle.js';
+  dwv.decoderScripts.jpeg2000 = "../../decoders/pdfjs/decode-jpeg2000.js";
+  dwv.decoderScripts["jpeg-lossless"] =
+    "../../decoders/rii-mango/decode-jpegloss.js";
+  dwv.decoderScripts["jpeg-baseline"] =
+    "../../decoders/pdfjs/decode-jpegbaseline.js";
+  dwv.decoderScripts.rle = "../../decoders/dwv/decode-rle.js";
 
   // // example private logic for roi dialog
   // dwv.customUI.openRoiDialog = function (meta, cb) {
@@ -77,13 +61,13 @@ function viewerSetup() {
   // use for concurrent load
   const numberOfDataToLoad = 1;
 
-  if (_layout === 'one') {
+  if (_layout === "one") {
     // simplest: one layer group
     addLayerGroups(1);
-  } else if (_layout === 'side') {
+  } else if (_layout === "side") {
     // side by side
     addLayerGroups(2);
-  } else if (_layout === 'mpr') {
+  } else if (_layout === "mpr") {
     // MPR
     viewOnFirstLoadItem = false;
     addLayerGroups(3);
@@ -95,32 +79,32 @@ function viewerSetup() {
     WindowLevel: {},
     ZoomAndPan: {},
     Opacity: {},
-    Draw: {options: ['Rectangle']}
+    Draw: { options: ["Rectangle"] },
   };
 
   // app config
   const config = {
     viewOnFirstLoadItem: viewOnFirstLoadItem,
-    tools: _tools
+    tools: _tools,
   };
   // app
   _app = new dwv.App();
   _app.init(config);
 
   // bind events
-  _app.addEventListener('loaderror', function (event) {
-    console.error('load error', event);
+  _app.addEventListener("loaderror", function (event) {
+    console.error("load error", event);
   });
-  _app.addEventListener('loadstart', function (event) {
-    console.time('load-data-' + event.dataid);
+  _app.addEventListener("loadstart", function (event) {
+    console.time("load-data-" + event.dataid);
     // update data view config
     const dataIds = [event.dataid];
     let configs;
-    if (_layout === 'one') {
+    if (_layout === "one") {
       configs = getOnebyOneDataViewConfig(dataIds);
-    } else if (_layout === 'side') {
+    } else if (_layout === "side") {
       configs = getOnebyTwoDataViewConfig(dataIds);
-    } else if (_layout === 'mpr') {
+    } else if (_layout === "mpr") {
       configs = getMPRDataViewConfig(dataIds);
     }
     const viewConfigs = configs[event.dataid];
@@ -132,40 +116,45 @@ function viewerSetup() {
   const sumReducer = function (sum, value) {
     return sum + value;
   };
-  _app.addEventListener('loadprogress', function (event) {
-    if (typeof event.lengthComputable !== 'undefined' &&
-      event.lengthComputable) {
-      dataLoadProgress[event.dataid] =
-        Math.ceil((event.loaded / event.total) * 100);
-      document.getElementById('loadprogress').value =
+  _app.addEventListener("loadprogress", function (event) {
+    if (
+      typeof event.lengthComputable !== "undefined" &&
+      event.lengthComputable
+    ) {
+      dataLoadProgress[event.dataid] = Math.ceil(
+        (event.loaded / event.total) * 100
+      );
+      document.getElementById("loadprogress").value =
         dataLoadProgress.reduce(sumReducer) / numberOfDataToLoad;
     }
   });
-  _app.addEventListener('load', function (event) {
+  _app.addEventListener("load", function (event) {
     if (!viewOnFirstLoadItem) {
       _app.render(event.dataid);
     }
   });
-  _app.addEventListener('loaditem', function (event) {
-    if (typeof event.warn !== 'undefined') {
-      console.warn('load-warn', event.warn);
+  _app.addEventListener("loaditem", function (event) {
+    if (typeof event.warn !== "undefined") {
+      console.warn("load-warn", event.warn);
     }
   });
-  _app.addEventListener('loadend', function (event) {
-    console.timeEnd('load-data-' + event.dataid);
+  _app.addEventListener("loadend", function (event) {
+    console.timeEnd("load-data-" + event.dataid);
   });
 
   let dataLoad = 0;
   const firstRender = [];
-  _app.addEventListener('load', function (event) {
+  _app.addEventListener("load", function (event) {
     // update UI at first render
     if (!firstRender.includes(event.dataid)) {
       // store data id
       firstRender.push(event.dataid);
       // log meta data
-      if (event.loadtype === 'image') {
-        console.log('metadata',
-          getMetaDataWithNames(_app.getMetaData(event.dataid)));
+      if (event.loadtype === "image") {
+        console.log(
+          "metadata",
+          getMetaDataWithNames(_app.getMetaData(event.dataid))
+        );
         // add data row
         addDataRow(event.dataid);
         ++dataLoad;
@@ -174,19 +163,21 @@ function viewerSetup() {
           // select tool
           _app.setTool(getSelectedTool());
 
-          const changeLayoutSelect = document.getElementById('changelayout');
+          const changeLayoutSelect = document.getElementById("changelayout");
           changeLayoutSelect.disabled = false;
-          const resetLayoutButton = document.getElementById('resetlayout');
+          const resetLayoutButton = document.getElementById("resetlayout");
           resetLayoutButton.disabled = false;
-          const smoothingChk = document.getElementById('changesmoothing');
+          const smoothingChk = document.getElementById("changesmoothing");
           smoothingChk.disabled = false;
         }
       }
     }
 
-    if (event.loadtype === 'image' &&
-      typeof _app.getMetaData(event.dataid)['00080060'] !== 'undefined' &&
-      _app.getMetaData(event.dataid)['00080060'].value[0] === 'SEG') {
+    if (
+      event.loadtype === "image" &&
+      typeof _app.getMetaData(event.dataid)["00080060"] !== "undefined" &&
+      _app.getMetaData(event.dataid)["00080060"].value[0] === "SEG"
+    ) {
       // log SEG details
       logFramePosPats(_app.getMetaData(event.dataid));
 
@@ -205,7 +196,9 @@ function viewerSetup() {
         // calculate slice difference
         const segOrigin0 = segImage.getGeometry().getOrigins()[0];
         const segOrigin0Point = new dwv.Point([
-          segOrigin0.getX(), segOrigin0.getY(), segOrigin0.getZ()
+          segOrigin0.getX(),
+          segOrigin0.getY(),
+          segOrigin0.getZ(),
         ]);
         const segOriginIndex = imgGeometry.worldToIndex(segOrigin0Point);
         const indexOffset = segOriginIndex.get(2) * sliceSize;
@@ -213,10 +206,12 @@ function viewerSetup() {
         vc.setViewAlphaFunction(function (value, index) {
           // multiply by 3 since SEG is RGB
           const segIndex = 3 * (index - indexOffset);
-          if (segIndex >= 0 &&
+          if (
+            segIndex >= 0 &&
             segImage.getValueAtOffset(segIndex) === 0 &&
             segImage.getValueAtOffset(segIndex + 1) === 0 &&
-            segImage.getValueAtOffset(segIndex + 2) === 0) {
+            segImage.getValueAtOffset(segIndex + 2) === 0
+          ) {
             return 0;
           } else {
             return 0xff;
@@ -226,33 +221,35 @@ function viewerSetup() {
     }
   });
 
-  _app.addEventListener('positionchange', function (event) {
-    const input = document.getElementById('position');
+  _app.addEventListener("positionchange", function (event) {
+    const input = document.getElementById("position");
     const values = event.value[1];
-    let text = '(index: ' + event.value[0] + ')';
+    let text = "(index: " + event.value[0] + ")";
     if (event.value.length > 2) {
-      text += ' value: ' + event.value[2];
+      text += " value: " + event.value[2];
     }
     input.value = values.map(getPrecisionRound(2));
     // index as small text
-    const span = document.getElementById('positionspan');
-    
-    //Keep postion on cordinates
-    
-    coordinates.push(event.value[1])
-    console.log(coordinates)
-    span.innerHTML = text;
-    const coordinatesTable = document.querySelector('.table_visualizer table tbody');
+    const span = document.getElementById("positionspan");
 
-    // Limpiar la tabla antes de agregar nuevos datos
-    coordinatesTable.innerHTML = '';
-    let id = 1;
-    coordinates.forEach(coord => {
-        const newRow = document.createElement('tr');
-        const idCell = document.createElement('td');
-        const xCell = document.createElement('td');
-        const yCell = document.createElement('td');
-        const zCell = document.createElement('td');
+    //Keep postion on cordinates
+    if (coordinates.length < 5) {
+      coordinates.push(event.value[1]);
+      console.log(coordinates);
+      span.innerHTML = text;
+      const coordinatesTable = document.querySelector(
+        ".table_visualizer table tbody"
+      );
+
+      // Limpiar la tabla antes de agregar nuevos datos
+      coordinatesTable.innerHTML = "";
+      let id = 1;
+      coordinates.forEach((coord) => {
+        const newRow = document.createElement("tr");
+        const idCell = document.createElement("td");
+        const xCell = document.createElement("td");
+        const yCell = document.createElement("td");
+        const zCell = document.createElement("td");
 
         idCell.textContent = id++;
         xCell.textContent = coord[0];
@@ -265,19 +262,19 @@ function viewerSetup() {
         newRow.appendChild(zCell);
 
         coordinatesTable.appendChild(newRow);
-    });
+      });
+    }
   });
 
-  
-
-
   // default keyboard shortcuts
-  window.addEventListener('keydown', function (event) {
+  window.addEventListener("keydown", function (event) {
     _app.defaultOnKeydown(event);
     // mask segment related
     if (!isNaN(parseInt(event.key, 10))) {
-      const vc =
-        _app.getActiveLayerGroup().getActiveViewLayer().getViewController();
+      const vc = _app
+        .getActiveLayerGroup()
+        .getActiveViewLayer()
+        .getViewController();
       if (!vc.isMask()) {
         return;
       }
@@ -287,11 +284,11 @@ function viewerSetup() {
         const segment = segHelper.getSegment(number);
         if (event.ctrlKey) {
           if (event.altKey) {
-            console.log('Delete segment: ' + segment.label);
+            console.log("Delete segment: " + segment.label);
             // delete
             vc.deleteSegment(number, _app.addToUndoStack);
           } else {
-            console.log('Show/hide segment: ' + segment.label);
+            console.log("Show/hide segment: " + segment.label);
             // show/hide the selected segment
             if (segHelper.isHidden(number)) {
               segHelper.removeFromHidden(number);
@@ -305,17 +302,19 @@ function viewerSetup() {
     }
   });
   // default on resize
-  window.addEventListener('resize', function () {
+  window.addEventListener("resize", function () {
     _app.onResize();
   });
 
   const options = {};
   // special dicom web request header
   if (_dicomWeb) {
-    options.requestHeaders = [{
-      name: 'Accept',
-      value: 'multipart/related; type="application/dicom"; transfer-syntax=*'
-    }];
+    options.requestHeaders = [
+      {
+        name: "Accept",
+        value: 'multipart/related; type="application/dicom"; transfer-syntax=*',
+      },
+    ];
   }
   // load from window location
   _app.loadFromUri(window.location.href, options);
@@ -328,43 +327,44 @@ function onDOMContentLoaded() {
   // setup
   viewerSetup();
 
-  const positionInput = document.getElementById('position');
-  positionInput.addEventListener('change', function () {
-    const vls = _app.getViewLayersByDataId('0');
+  const positionInput = document.getElementById("position");
+  positionInput.addEventListener("change", function () {
+    const vls = _app.getViewLayersByDataId("0");
     const vc = vls[0].getViewController();
-    const values = this.value.split(',');
-    vc.setCurrentPosition(new dwv.Point([
-      parseFloat(values[0]), parseFloat(values[1]), parseFloat(values[2])
-    ])
+    const values = this.value.split(",");
+    vc.setCurrentPosition(
+      new dwv.Point([
+        parseFloat(values[0]),
+        parseFloat(values[1]),
+        parseFloat(values[2]),
+      ])
     );
   });
 
-  const resetLayoutButton = document.getElementById('resetlayout');
+  const resetLayoutButton = document.getElementById("resetlayout");
   resetLayoutButton.disabled = true;
-  resetLayoutButton.addEventListener('click', function () {
+  resetLayoutButton.addEventListener("click", function () {
     _app.resetLayout();
   });
 
-  const changeLayoutSelect = document.getElementById('changelayout');
+  const changeLayoutSelect = document.getElementById("changelayout");
   changeLayoutSelect.disabled = true;
-  changeLayoutSelect.addEventListener('change', function (event) {
+  changeLayoutSelect.addEventListener("change", function (event) {
     const layout = event.target.value;
-    if (layout !== 'one' &&
-      layout !== 'side' &&
-      layout !== 'mpr') {
-      throw new Error('Unknown layout: ' + layout);
+    if (layout !== "one" && layout !== "side" && layout !== "mpr") {
+      throw new Error("Unknown layout: " + layout);
     }
     _layout = layout;
 
     let configs;
     const dataIds = _app.getDataIds();
-    if (layout === 'one') {
+    if (layout === "one") {
       addLayerGroups(1);
       configs = getOnebyOneDataViewConfig(dataIds);
-    } else if (layout === 'side') {
+    } else if (layout === "side") {
       addLayerGroups(2);
       configs = getOnebyTwoDataViewConfig(dataIds);
-    } else if (layout === 'mpr') {
+    } else if (layout === "mpr") {
       addLayerGroups(3);
       configs = getMPRDataViewConfig(dataIds);
     }
@@ -386,10 +386,10 @@ function onDOMContentLoaded() {
     _app.setTool(getSelectedTool());
   });
 
-  const smoothingChk = document.getElementById('changesmoothing');
+  const smoothingChk = document.getElementById("changesmoothing");
   smoothingChk.checked = false;
   smoothingChk.disabled = true;
-  smoothingChk.addEventListener('change', function (event) {
+  smoothingChk.addEventListener("change", function (event) {
     _app.setImageSmoothing(event.target.checked);
   });
 
@@ -400,9 +400,9 @@ function onDOMContentLoaded() {
   setupAbout();
 
   // bind app to input files
-  const fileinput = document.getElementById('fileinput');
-  fileinput.addEventListener('change', function (event) {
-    console.log('%c ----------------', 'color: teal;');
+  const fileinput = document.getElementById("fileinput");
+  fileinput.addEventListener("change", function (event) {
+    console.log("%c ----------------", "color: teal;");
     console.log(event.target.files);
     _app.loadFiles(event.target.files);
   });
@@ -414,10 +414,10 @@ function onDOMContentLoaded() {
  * @param {string} id The id of the layer.
  */
 function addLayerGroup(id) {
-  const layerDiv = document.createElement('div');
+  const layerDiv = document.createElement("div");
   layerDiv.id = id;
-  layerDiv.className = 'layerGroup';
-  const root = document.getElementById('dwv');
+  layerDiv.className = "layerGroup";
+  const root = document.getElementById("dwv");
   root.appendChild(layerDiv);
 }
 
@@ -428,11 +428,11 @@ function addLayerGroup(id) {
  */
 function addLayerGroups(number) {
   // clean up
-  const dwvDiv = document.getElementById('dwv');
-  dwvDiv.innerHTML = '';
+  const dwvDiv = document.getElementById("dwv");
+  dwvDiv.innerHTML = "";
   // add div
   for (let i = 0; i < number; ++i) {
-    addLayerGroup('layerGroup' + i);
+    addLayerGroup("layerGroup" + i);
   }
 }
 
@@ -443,14 +443,14 @@ function addLayerGroups(number) {
  * @returns {object} The config
  */
 function getViewConfig(divId) {
-  const config = {divId: divId};
-  if (_layout === 'mpr') {
-    if (divId === 'layerGroup0') {
-      config.orientation = 'axial';
-    } else if (divId === 'layerGroup1') {
-      config.orientation = 'coronal';
-    } else if (divId === 'layerGroup2') {
-      config.orientation = 'sagittal';
+  const config = { divId: divId };
+  if (_layout === "mpr") {
+    if (divId === "layerGroup0") {
+      config.orientation = "axial";
+    } else if (divId === "layerGroup1") {
+      config.orientation = "coronal";
+    } else if (divId === "layerGroup2") {
+      config.orientation = "sagittal";
     }
   }
   return config;
@@ -465,7 +465,7 @@ function getViewConfig(divId) {
 function getOnebyOneDataViewConfig(dataIds) {
   const configs = {};
   for (let i = 0; i < dataIds.length; ++i) {
-    configs[dataIds[i]] = [getViewConfig('layerGroup0')];
+    configs[dataIds[i]] = [getViewConfig("layerGroup0")];
   }
   return configs;
 }
@@ -480,9 +480,9 @@ function getOnebyTwoDataViewConfig(dataIds) {
   const configs = {};
   for (let i = 0; i < dataIds.length; ++i) {
     if (i % 2 === 0) {
-      configs[dataIds[i]] = [getViewConfig('layerGroup0')];
+      configs[dataIds[i]] = [getViewConfig("layerGroup0")];
     } else {
-      configs[dataIds[i]] = [getViewConfig('layerGroup1')];
+      configs[dataIds[i]] = [getViewConfig("layerGroup1")];
     }
   }
   return configs;
@@ -498,9 +498,9 @@ function getMPRDataViewConfig(dataIds) {
   const configs = {};
   for (let i = 0; i < dataIds.length; ++i) {
     configs[dataIds[i]] = [
-      getViewConfig('layerGroup0'),
-      getViewConfig('layerGroup1'),
-      getViewConfig('layerGroup2')
+      getViewConfig("layerGroup0"),
+      getViewConfig("layerGroup1"),
+      getViewConfig("layerGroup2"),
     ];
   }
   return configs;
@@ -550,8 +550,8 @@ function getDivIds(dataViewConfig) {
 function getDataLayerGroupDivIds(dataId) {
   const dataViewConfigs = _app.getDataViewConfig();
   let viewConfig = dataViewConfigs[dataId];
-  if (typeof viewConfig === 'undefined') {
-    viewConfig = dataViewConfigs['*'];
+  if (typeof viewConfig === "undefined") {
+    viewConfig = dataViewConfigs["*"];
   }
   return getDivIds(viewConfig);
 }
@@ -560,18 +560,12 @@ function getDataLayerGroupDivIds(dataId) {
  * Setup the binders checkboxes
  */
 function setupBindersCheckboxes() {
-  const bindersDiv = document.getElementById('binders');
-  const propList = [
-    'WindowLevel',
-    'Position',
-    'Zoom',
-    'Offset',
-    'Opacity'
-  ];
+  const bindersDiv = document.getElementById("binders");
+  const propList = ["WindowLevel", "Position", "Zoom", "Offset", "Opacity"];
   const binders = [];
   // add all binders at startup
   for (let b = 0; b < propList.length; ++b) {
-    binders.push(propList[b] + 'Binder');
+    binders.push(propList[b] + "Binder");
   }
   _app.setLayerGroupsBinders(binders);
 
@@ -581,7 +575,7 @@ function setupBindersCheckboxes() {
    * @param {string} propName The name of the property to bind.
    */
   function addBinder(propName) {
-    binders.push(propName + 'Binder');
+    binders.push(propName + "Binder");
     _app.setLayerGroupsBinders(binders);
   }
   /**
@@ -590,7 +584,7 @@ function setupBindersCheckboxes() {
    * @param {string} propName The name of the property to bind.
    */
   function removeBinder(propName) {
-    const index = binders.indexOf(propName + 'Binder');
+    const index = binders.indexOf(propName + "Binder");
     if (index !== -1) {
       binders.splice(index, 1);
     }
@@ -615,13 +609,13 @@ function setupBindersCheckboxes() {
   for (let i = 0; i < propList.length; ++i) {
     const propName = propList[i];
 
-    const input = document.createElement('input');
-    input.id = 'binder-' + i;
-    input.type = 'checkbox';
+    const input = document.createElement("input");
+    input.id = "binder-" + i;
+    input.type = "checkbox";
     input.checked = true;
     input.onchange = getOnInputChange(propName);
 
-    const label = document.createElement('label');
+    const label = document.createElement("label");
     label.htmlFor = input.id;
     label.appendChild(document.createTextNode(propName));
 
@@ -630,18 +624,18 @@ function setupBindersCheckboxes() {
   }
 
   // check all
-  const allInput = document.createElement('input');
-  allInput.id = 'binder-all';
-  allInput.type = 'checkbox';
+  const allInput = document.createElement("input");
+  allInput.id = "binder-all";
+  allInput.type = "checkbox";
   allInput.checked = true;
   allInput.onchange = function () {
     for (let j = 0; j < propList.length; ++j) {
-      document.getElementById('binder-' + j).click();
+      document.getElementById("binder-" + j).click();
     }
   };
-  const allLabel = document.createElement('label');
+  const allLabel = document.createElement("label");
   allLabel.htmlFor = allInput.id;
-  allLabel.appendChild(document.createTextNode('all'));
+  allLabel.appendChild(document.createTextNode("all"));
   bindersDiv.appendChild(allInput);
   bindersDiv.appendChild(allLabel);
 }
@@ -650,25 +644,27 @@ function setupBindersCheckboxes() {
  * Setup the tools checkboxes
  */
 function setupToolsCheckboxes() {
-  const toolsDiv = document.getElementById('tools');
+  const toolsDiv = document.getElementById("tools");
   const keys = Object.keys(_tools);
 
   const getChangeTool = function (tool) {
     return function () {
       _app.setTool(tool);
-      if (tool === 'Draw') {
+      if (tool === "Draw") {
         const name = _tools.Draw.options[0];
-        _app.setToolFeatures({shapeName: name});
+        _app.setToolFeatures({ shapeName: name });
       }
     };
   };
 
   const getKeyCheck = function (char, input) {
     return function (event) {
-      if (!event.ctrlKey &&
+      if (
+        !event.ctrlKey &&
         !event.altKey &&
         !event.shiftKey &&
-        event.key === char) {
+        event.key === char
+      ) {
         input.click();
       }
     };
@@ -677,17 +673,17 @@ function setupToolsCheckboxes() {
   for (let i = 0; i < keys.length; ++i) {
     const key = keys[i];
 
-    const input = document.createElement('input');
-    input.id = 'tool-' + i;
-    input.name = 'tools';
-    input.type = 'radio';
+    const input = document.createElement("input");
+    input.id = "tool-" + i;
+    input.name = "tools";
+    input.type = "radio";
     input.onchange = getChangeTool(key);
 
-    if (key === 'Scroll') {
+    if (key === "Scroll") {
       input.checked = true;
     }
 
-    const label = document.createElement('label');
+    const label = document.createElement("label");
     label.htmlFor = input.id;
     label.appendChild(document.createTextNode(key));
 
@@ -696,7 +692,9 @@ function setupToolsCheckboxes() {
 
     // keyboard shortcut
     window.addEventListener(
-      'keydown', getKeyCheck(key[0].toLowerCase(), input));
+      "keydown",
+      getKeyCheck(key[0].toLowerCase(), input)
+    );
   }
 }
 
@@ -706,7 +704,7 @@ function setupToolsCheckboxes() {
  * @returns {string} The tool name.
  */
 function getSelectedTool() {
-  const toolsInput = document.getElementsByName('tools');
+  const toolsInput = document.getElementsByName("tools");
   let toolIndex = null;
   for (let j = 0; j < toolsInput.length; ++j) {
     if (toolsInput[j].checked) {
@@ -721,16 +719,16 @@ function getSelectedTool() {
  * Bind app to controls.
  */
 function bindAppToControls() {
-  _app.addEventListener('wlchange', onWLChange);
-  _app.addEventListener('opacitychange', onOpacityChange);
+  _app.addEventListener("wlchange", onWLChange);
+  _app.addEventListener("opacitychange", onOpacityChange);
 }
 
 /**
  * Unbind app to controls.
  */
 function unbindAppToControls() {
-  _app.removeEventListener('wlchange', onWLChange);
-  _app.removeEventListener('opacitychange', onOpacityChange);
+  _app.removeEventListener("wlchange", onWLChange);
+  _app.removeEventListener("opacitychange", onOpacityChange);
 }
 
 /**
@@ -740,49 +738,49 @@ function unbindAppToControls() {
  */
 function onWLChange(event) {
   // width number
-  let elemId = 'width-' + event.dataid + '-number';
+  let elemId = "width-" + event.dataid + "-number";
   let elem = document.getElementById(elemId);
   if (elem) {
     elem.value = event.value[1];
   } else {
-    console.warn('wl change: HTML not ready?');
+    console.warn("wl change: HTML not ready?");
   }
   // width range
-  elemId = 'width-' + event.dataid + '-range';
+  elemId = "width-" + event.dataid + "-range";
   elem = document.getElementById(elemId);
   if (elem) {
     elem.value = event.value[1];
   }
   // center number
-  elemId = 'center-' + event.dataid + '-number';
+  elemId = "center-" + event.dataid + "-number";
   elem = document.getElementById(elemId);
   if (elem) {
     elem.value = event.value[0];
   }
   // center range
-  elemId = 'center-' + event.dataid + '-range';
+  elemId = "center-" + event.dataid + "-range";
   elem = document.getElementById(elemId);
   if (elem) {
     elem.value = event.value[0];
   }
   // preset select
-  elemId = 'preset-' + event.dataid + '-select';
+  elemId = "preset-" + event.dataid + "-select";
   elem = document.getElementById(elemId);
   if (elem) {
     const ids = getDataLayerGroupDivIds(event.dataid);
     const lg = _app.getLayerGroupByDivId(ids[0]);
     const vls = lg.getViewLayersByDataId(event.dataid);
-    if (typeof vls !== 'undefined' && vls.length !== 0) {
+    if (typeof vls !== "undefined" && vls.length !== 0) {
       const vl = vls[0];
       const vc = vl.getViewController();
       const presetName = vc.getCurrentWindowPresetName();
-      const optName = 'manual';
+      const optName = "manual";
       if (presetName === optName) {
         const options = elem.options;
-        const optId = 'preset-manual';
+        const optId = "preset-manual";
         let manualOpt = options.namedItem(optId);
         if (!manualOpt) {
-          const opt = document.createElement('option');
+          const opt = document.createElement("option");
           opt.id = optId;
           opt.value = optName;
           opt.appendChild(document.createTextNode(optName));
@@ -802,15 +800,15 @@ function onWLChange(event) {
 function onOpacityChange(event) {
   const value = parseFloat(event.value[0]).toPrecision(3);
   // number
-  let elemId = 'opacity-' + event.dataid + '-number';
+  let elemId = "opacity-" + event.dataid + "-number";
   let elem = document.getElementById(elemId);
   if (elem) {
     elem.value = value;
   } else {
-    console.warn('opacity change: HTML not ready?');
+    console.warn("opacity change: HTML not ready?");
   }
   // range
-  elemId = 'opacity-' + event.dataid + '-range';
+  elemId = "opacity-" + event.dataid + "-range";
   elem = document.getElementById(elemId);
   if (elem) {
     elem.value = value;
@@ -821,8 +819,8 @@ function onOpacityChange(event) {
  * Clear the data table.
  */
 function clearDataTable() {
-  const detailsDiv = document.getElementById('layersdetails');
-  detailsDiv.innerHTML = '';
+  const detailsDiv = document.getElementById("layersdetails");
+  detailsDiv.innerHTML = "";
 }
 
 /**
@@ -838,25 +836,25 @@ function clearDataTable() {
  * @returns {object} The control div.
  */
 function getControlDiv(id, name, min, max, value, callback, precision) {
-  const range = document.createElement('input');
-  range.id = id + '-range';
-  range.className = 'ctrl-range';
-  range.type = 'range';
+  const range = document.createElement("input");
+  range.id = id + "-range";
+  range.className = "ctrl-range";
+  range.type = "range";
   range.min = min.toPrecision(precision);
   range.max = max.toPrecision(precision);
   range.step = ((max - min) * 0.01).toPrecision(precision);
   range.value = value;
 
-  const label = document.createElement('label');
-  label.id = id + '-label';
-  label.className = 'ctrl-label';
+  const label = document.createElement("label");
+  label.id = id + "-label";
+  label.className = "ctrl-label";
   label.htmlFor = range.id;
   label.appendChild(document.createTextNode(name));
 
-  const number = document.createElement('input');
-  number.id = id + '-number';
-  number.className = 'ctrl-number';
-  number.type = 'number';
+  const number = document.createElement("input");
+  number.id = id + "-number";
+  number.className = "ctrl-number";
+  number.type = "number";
   number.min = range.min;
   number.max = range.max;
   number.step = range.step;
@@ -872,9 +870,9 @@ function getControlDiv(id, name, min, max, value, callback, precision) {
     callback(this.value);
   };
 
-  const div = document.createElement('div');
-  div.id = id + '-ctrl';
-  div.className = 'ctrl';
+  const div = document.createElement("div");
+  div.id = id + "-ctrl";
+  div.className = "ctrl";
   div.appendChild(label);
   div.appendChild(range);
   div.appendChild(number);
@@ -889,7 +887,7 @@ function getControlDiv(id, name, min, max, value, callback, precision) {
  */
 function addDataRow(dataId) {
   // bind app to controls on first id
-  if (dataId === '0') {
+  if (dataId === "0") {
     bindAppToControls();
   }
 
@@ -901,30 +899,30 @@ function addDataRow(dataId) {
   const initialVc = initialVl.getViewController();
   const initialWl = initialVc.getWindowLevel();
 
-  let table = document.getElementById('layerstable');
+  let table = document.getElementById("layerstable");
   let body;
   // create table if not present
   if (!table) {
-    table = document.createElement('table');
-    table.id = 'layerstable';
+    table = document.createElement("table");
+    table.id = "layerstable";
     const header = table.createTHead();
     const trow = header.insertRow(0);
     const insertTCell = function (text) {
-      const th = document.createElement('th');
+      const th = document.createElement("th");
       th.innerHTML = text;
       trow.appendChild(th);
     };
-    insertTCell('Id');
+    insertTCell("Id");
     for (let j = 0; j < allLayerGroupDivIds.length; ++j) {
-      insertTCell('LG' + j);
+      insertTCell("LG" + j);
     }
-    insertTCell('Contrast');
-    insertTCell('Preset');
+    insertTCell("Contrast");
+    insertTCell("Preset");
     body = table.createTBody();
-    const div = document.getElementById('layersdetails');
+    const div = document.getElementById("layersdetails");
     div.appendChild(table);
   } else {
-    body = table.getElementsByTagName('tbody')[0];
+    body = table.getElementsByTagName("tbody")[0];
   }
 
   // add new layer row
@@ -936,7 +934,7 @@ function addDataRow(dataId) {
     const res = [];
     for (let l = 0; l < allLayerGroupDivIds.length; ++l) {
       const layerGroupDivId = allLayerGroupDivIds[l];
-      const elemId = 'layerselect-' + layerGroupDivId + '-' + dataId;
+      const elemId = "layerselect-" + layerGroupDivId + "-" + dataId;
       const elem = document.getElementById(elemId);
       if (elem && elem.checked) {
         res.push(layerGroupDivId);
@@ -947,14 +945,14 @@ function addDataRow(dataId) {
 
   // get a layer radio button
   const getLayerRadio = function (index, divId) {
-    const radio = document.createElement('input');
-    radio.type = 'radio';
-    radio.name = 'layerselect-' + index;
-    radio.id = 'layerselect-' + divId + '-' + dataId;
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "layerselect-" + index;
+    radio.id = "layerselect-" + divId + "-" + dataId;
     radio.checked = true;
     radio.onchange = function (event) {
       const fullId = event.target.id;
-      const split = fullId.split('-');
+      const split = fullId.split("-");
       const groupDivId = split[1];
       const dataId = split[2];
       const lg = _app.getLayerGroupByDivId(groupDivId);
@@ -966,11 +964,11 @@ function addDataRow(dataId) {
 
   // get a layer add button
   const getLayerAdd = function (index, divId) {
-    const button = document.createElement('button');
-    button.name = 'layeradd-' + index;
-    button.id = 'layeradd-' + divId + '-' + dataId;
-    button.title = 'Add layer';
-    button.appendChild(document.createTextNode('+'));
+    const button = document.createElement("button");
+    button.name = "layeradd-" + index;
+    button.id = "layeradd-" + divId + "-" + dataId;
+    button.title = "Add layer";
+    button.appendChild(document.createTextNode("+"));
     button.onclick = function () {
       // update app
       _app.addDataViewConfig(dataId, getViewConfig(divId));
@@ -979,20 +977,20 @@ function addDataRow(dataId) {
       parent.replaceChildren();
       parent.appendChild(getLayerRadio(index, divId));
       parent.appendChild(getLayerRem(index, divId));
-      parent.appendChild(getLayerUpdate(index, divId, 'axial'));
-      parent.appendChild(getLayerUpdate(index, divId, 'coronal'));
-      parent.appendChild(getLayerUpdate(index, divId, 'sagittal'));
+      parent.appendChild(getLayerUpdate(index, divId, "axial"));
+      parent.appendChild(getLayerUpdate(index, divId, "coronal"));
+      parent.appendChild(getLayerUpdate(index, divId, "sagittal"));
     };
     return button;
   };
 
   // get a layer remove button
   const getLayerRem = function (index, divId) {
-    const button = document.createElement('button');
-    button.name = 'layerrem-' + index;
-    button.id = 'layerrem-' + divId + '-' + dataId;
-    button.title = 'Remove layer';
-    button.appendChild(document.createTextNode('-'));
+    const button = document.createElement("button");
+    button.name = "layerrem-" + index;
+    button.id = "layerrem-" + divId + "-" + dataId;
+    button.title = "Remove layer";
+    button.appendChild(document.createTextNode("-"));
     button.onclick = function () {
       // update app
       _app.removeDataViewConfig(dataId, getViewConfig(divId));
@@ -1006,11 +1004,11 @@ function addDataRow(dataId) {
 
   // get a layer update button
   const getLayerUpdate = function (index, divId, orientation) {
-    const button = document.createElement('button');
+    const button = document.createElement("button");
     const letter = orientation[0].toUpperCase();
-    button.name = 'layerupd-' + index + '_' + letter;
-    button.id = 'layerupd-' + divId + '-' + dataId + '_' + letter;
-    button.title = 'Change layer orientation to ' + orientation;
+    button.name = "layerupd-" + index + "_" + letter;
+    button.id = "layerupd-" + divId + "-" + dataId + "_" + letter;
+    button.title = "Change layer orientation to " + orientation;
     button.appendChild(document.createTextNode(letter));
     button.onclick = function () {
       // update app
@@ -1027,8 +1025,8 @@ function addDataRow(dataId) {
 
   // cell: radio
   let viewConfig = dataViewConfigs[dataId];
-  if (typeof viewConfig === 'undefined') {
-    viewConfig = dataViewConfigs['*'];
+  if (typeof viewConfig === "undefined") {
+    viewConfig = dataViewConfigs["*"];
   }
   const dataLayerGroupsIds = getDivIds(viewConfig);
   for (let l = 0; l < allLayerGroupDivIds.length; ++l) {
@@ -1037,9 +1035,9 @@ function addDataRow(dataId) {
     if (dataLayerGroupsIds.includes(layerGroupDivId)) {
       cell.appendChild(getLayerRadio(l, layerGroupDivId));
       cell.appendChild(getLayerRem(l, layerGroupDivId));
-      cell.appendChild(getLayerUpdate(l, layerGroupDivId, 'axial'));
-      cell.appendChild(getLayerUpdate(l, layerGroupDivId, 'coronal'));
-      cell.appendChild(getLayerUpdate(l, layerGroupDivId, 'sagittal'));
+      cell.appendChild(getLayerUpdate(l, layerGroupDivId, "axial"));
+      cell.appendChild(getLayerUpdate(l, layerGroupDivId, "coronal"));
+      cell.appendChild(getLayerUpdate(l, layerGroupDivId, "sagittal"));
     } else {
       cell.appendChild(getLayerAdd(l, layerGroupDivId));
     }
@@ -1050,17 +1048,18 @@ function addDataRow(dataId) {
   const rescaledDataRange = image.getRescaledDataRange();
   const floatPrecision = 4;
 
-  
   // cell: contrast
   cell = row.insertCell();
-  const widthId = 'width-' + dataId;
-  const centerId = 'center-' + dataId;
+  const widthId = "width-" + dataId;
+  const centerId = "center-" + dataId;
   // callback
   const changeContrast = function () {
-    const width =
-      parseFloat(document.getElementById(widthId + '-number').value);
-    const center =
-      parseFloat(document.getElementById(centerId + '-number').value);
+    const width = parseFloat(
+      document.getElementById(widthId + "-number").value
+    );
+    const center = parseFloat(
+      document.getElementById(centerId + "-number").value
+    );
     // update selected layers
     const lgIds = getSelectedLayerGroupIds();
     for (let i = 0; i < lgIds.length; ++i) {
@@ -1070,12 +1069,28 @@ function addDataRow(dataId) {
     }
   };
   // add controls
-  cell.appendChild(getControlDiv(widthId, 'width',
-    0, rescaledDataRange.max - rescaledDataRange.min, initialWl.width,
-    changeContrast, floatPrecision));
-  cell.appendChild(getControlDiv(centerId, 'center',
-    rescaledDataRange.min, rescaledDataRange.max, initialWl.center,
-    changeContrast, floatPrecision));
+  cell.appendChild(
+    getControlDiv(
+      widthId,
+      "width",
+      0,
+      rescaledDataRange.max - rescaledDataRange.min,
+      initialWl.width,
+      changeContrast,
+      floatPrecision
+    )
+  );
+  cell.appendChild(
+    getControlDiv(
+      centerId,
+      "center",
+      rescaledDataRange.min,
+      rescaledDataRange.max,
+      initialWl.center,
+      changeContrast,
+      floatPrecision
+    )
+  );
 
   // cell: presets
   cell = row.insertCell();
@@ -1089,19 +1104,17 @@ function addDataRow(dataId) {
       vc.setWindowLevelPreset(event.target.value);
     }
   };
-  const select = document.createElement('select');
-  select.id = 'preset-' + dataId + '-select';
+  const select = document.createElement("select");
+  select.id = "preset-" + dataId + "-select";
   const presets = initialVc.getWindowLevelPresetsNames();
   for (const preset of presets) {
-    const option = document.createElement('option');
+    const option = document.createElement("option");
     option.value = preset;
     option.appendChild(document.createTextNode(preset));
     select.appendChild(option);
   }
   select.onchange = changePreset;
   cell.appendChild(select);
-
-
 }
 
 /**
@@ -1112,8 +1125,8 @@ function addDataRow(dataId) {
  * @returns {number} Negative if a<b, positive if a>b.
  */
 function comparePosPat(a, b) {
-  const za = parseFloat(a.split('\\').at(-1));
-  const zb = parseFloat(b.split('\\').at(-1));
+  const za = parseFloat(a.split("\\").at(-1));
+  const zb = parseFloat(b.split("\\").at(-1));
   return za - zb;
 }
 
@@ -1153,23 +1166,23 @@ function getPrecisionRound(precision) {
  */
 function logFramePosPats(elements) {
   // PerFrameFunctionalGroupsSequence
-  const perFrame = elements['52009230'].value;
+  const perFrame = elements["52009230"].value;
   const perPos = {};
   for (let i = 0; i < perFrame.length; ++i) {
     // PlanePositionSequence
-    const posSq = perFrame[i]['00209113'].value;
+    const posSq = perFrame[i]["00209113"].value;
     // ImagePositionPatient
-    const pos = posSq[0]['00200032'].value;
-    if (typeof perPos[pos] === 'undefined') {
+    const pos = posSq[0]["00200032"].value;
+    if (typeof perPos[pos] === "undefined") {
       perPos[pos] = [];
     }
     // FrameContentSequence
-    const frameSq = perFrame[i]['00209111'].value;
+    const frameSq = perFrame[i]["00209111"].value;
     // DimensionIndexValues
-    const dim = frameSq[0]['00209157'].value;
+    const dim = frameSq[0]["00209157"].value;
     perPos[pos].push(dim);
   }
-  console.log('DICOM SEG Segments', sortByPosPatKey(perPos));
+  console.log("DICOM SEG Segments", sortByPosPatKey(perPos));
 }
 
 /**
@@ -1180,14 +1193,14 @@ function logFramePosPats(elements) {
  */
 function getMetaDataWithNames(metaData) {
   let meta = metaData;
-  if (typeof meta['00020010'] !== 'undefined') {
+  if (typeof meta["00020010"] !== "undefined") {
     // replace tag key with tag name for dicom
     meta = Object.keys(meta).reduce((accumulator, currentValue) => {
       const tag = dwv.getTagFromKey(currentValue);
       let key = tag.getNameFromDictionary();
-      if (typeof key === 'undefined') {
+      if (typeof key === "undefined") {
         // add 'x' to help sorting
-        key = 'x' + tag.getKey();
+        key = "x" + tag.getKey();
       }
       accumulator[key] = meta[currentValue];
       return accumulator;
@@ -1200,11 +1213,11 @@ function getMetaDataWithNames(metaData) {
  * Setup test line.
  */
 function setupTests() {
-  const renderTestButton = document.createElement('button');
+  const renderTestButton = document.createElement("button");
   renderTestButton.onclick = runRenderTest;
-  renderTestButton.appendChild(document.createTextNode('render test'));
+  renderTestButton.appendChild(document.createTextNode("render test"));
 
-  const testsDiv = document.getElementById('tests');
+  const testsDiv = document.getElementById("tests");
   testsDiv.appendChild(renderTestButton);
 }
 
@@ -1241,7 +1254,7 @@ function getSimpleStats(array) {
     min: min,
     max: max,
     mean: mean,
-    stdDev: stdDev
+    stdDev: stdDev,
   };
 }
 
@@ -1272,16 +1285,16 @@ function runRenderTest() {
         runner();
       }, 100);
     } else {
-      console.log('Stats:', getSimpleStats(timings));
+      console.log("Stats:", getSimpleStats(timings));
       // clean up
-      _app.removeEventListener('renderstart', onRenderStart);
-      _app.removeEventListener('renderend', onRenderEnd);
+      _app.removeEventListener("renderstart", onRenderStart);
+      _app.removeEventListener("renderend", onRenderEnd);
     }
   };
 
   // setup
-  _app.addEventListener('renderstart', onRenderStart);
-  _app.addEventListener('renderend', onRenderEnd);
+  _app.addEventListener("renderstart", onRenderStart);
+  _app.addEventListener("renderend", onRenderEnd);
 
   // start
   runner();
@@ -1291,13 +1304,13 @@ function runRenderTest() {
  * Setup about line.
  */
 function setupAbout() {
-  const testsDiv = document.getElementById('about');
-  const link = document.createElement('a');
-  link.href = 'https://github.com/ivmartel/dwv';
-  link.appendChild(document.createTextNode('dwv'));
+  const testsDiv = document.getElementById("about");
+  const link = document.createElement("a");
+  link.href = "https://github.com/ivmartel/dwv";
+  link.appendChild(document.createTextNode("dwv"));
   const text = document.createTextNode(
-    ' v' + dwv.getDwvVersion() +
-    ' on ' + navigator.userAgent);
+    " v" + dwv.getDwvVersion() + " on " + navigator.userAgent
+  );
 
   testsDiv.appendChild(link);
   testsDiv.appendChild(text);
