@@ -24,6 +24,9 @@ export declare function addTagsToDictionary(group: string, tags: object): void;
  * ]);
  */
 export declare class App {
+
+    printImage(coordinates: any): void;
+
     /**
      * Get the image.
      *
@@ -3648,5 +3651,6 @@ export declare class WindowLut {
     getValue(offset: number): number;
     #private;
 }
+
 
 export { }
