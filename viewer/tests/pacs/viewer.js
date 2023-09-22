@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", onDOMContentLoaded);
 let _app = null;
 let _tools = null;
 let coordinates = [];
+let files = null;
 
 // viewer options
 let _layout = "one";
@@ -16,7 +17,9 @@ const _dicomWeb = false;
  * Setup simple dwv app.
  */
 function procces() {
-  _app.printImage(coordinates);
+  if (files != null) {
+    _app.printImage(coordinates, files);
+  }
 }
 
 function viewerSetup() {
@@ -402,8 +405,7 @@ function onDOMContentLoaded() {
   // bind app to input files
   const fileinput = document.getElementById("fileinput");
   fileinput.addEventListener("change", function (event) {
-    console.log("%c ----------------", "color: teal;");
-    console.log(event.target.files);
+    files = event.target.files;
     _app.loadFiles(event.target.files);
   });
 }
