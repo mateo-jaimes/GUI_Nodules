@@ -1,0 +1,8 @@
+.json-container {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    padding: 10px;
+    overflow: auto;
+    max-height: 400px; /* Establece una altura máxima para evitar desbordamientos */
+    white-space: pre-wrap; /* Mantiene los saltos de línea y el formato */
+}

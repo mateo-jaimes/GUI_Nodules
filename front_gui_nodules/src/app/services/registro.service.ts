@@ -22,6 +22,10 @@ export class RegistroService {
     let api = `${this.authUrl}/${id}`
     return this.httpClient.get(api);
   }
+  public getByUuid(uuid: string): Observable<any>{
+    let api = `${this.authUrl}/byUuid/${uuid}`
+    return this.httpClient.get(api);
+  }
   public update(id : string, registro: any): Observable<any>{
     return this.httpClient.put<any>(`${this.authUrl}/${id}`, registro);
   }
