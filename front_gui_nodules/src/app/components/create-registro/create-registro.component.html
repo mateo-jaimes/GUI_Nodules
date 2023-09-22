@@ -26,16 +26,9 @@
              </select>
           </div>
          <div class="col-md-4 mb-3">
-            <label for="validationServer013">Imagen Tac</label>
-            <select type="text" class="form-control " id="validationServer053"
-             formControlName="imagenTacid"
-              required name="imagenTacid" >
-                 <option></option>
-                 <option *ngFor="let imagen of imagenesTacList"
-                     value="{{imagen.id}}">
-                     {{imagen.identificador}}
-                 </option>
-             </select>
+            <label for="validationServer013">UUID</label>
+            <input type="text" class="form-control" formControlName="uuid" id="validationServer013" 
+             required name="uuid" >
           </div>
          
        </div>

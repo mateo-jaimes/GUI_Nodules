@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ImagenTacService } from 'src/app/services/imagen-tac.service';
 import { RegistroService } from 'src/app/services/registro.service';
 import { TipoRegistroService } from 'src/app/services/tipo-registro.service';
 import { TipoUsuarioService } from 'src/app/services/tipo-usuario.service';
@@ -30,11 +29,10 @@ export class CreateRegistroComponent implements OnInit {
     private registroService:RegistroService,
     private usuarioService: UsuarioService, 
     private tipoRegistroService:TipoRegistroService,
-    private imagenTacSerrvice:ImagenTacService
     ) { 
     this.userForm = this.fb.group({
       fecha: ['',[Validators.required]],
-      imagenTacid: ['',[Validators.required]],
+      uuid: ['',[Validators.required]],
       tipoRegistro: ['',[Validators.required]],
       usuario: ['',[Validators.required]],
     });
@@ -44,28 +42,11 @@ export class CreateRegistroComponent implements OnInit {
     const params = this.activatedRoute.snapshot.params;
     this.getUsuarios();
     this.getTiposRegistro();
-    this.getImagenTacs();
     this.registroId = params['id'];
     if(this.registroId !== undefined){
       this.edit=true;
       this.getRegistroEdit()
     } 
-  }
-
-  getImagenTacs(){
-    this.imagenTacSerrvice.lista().subscribe({
-      next:(res:any)=>{
-        this.imagenesTacList=res;
-      },
-      error:err=>{
-        Swal.fire({
-          title: 'Error',
-          text:err.error.exception,
-          icon: 'error',
-          confirmButtonText: 'Aceptar',
-        });
-      }
-    })
   }
 
   getTiposRegistro(){

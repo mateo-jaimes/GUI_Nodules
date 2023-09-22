@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ListImagenTacComponent } from './list-imagen-tac.component';
+import { DetalleRegistroComponent } from './detalle-registro.component';
 
-describe('ListImagenTacComponent', () => {
-  let component: ListImagenTacComponent;
-  let fixture: ComponentFixture<ListImagenTacComponent>;
+describe('DetalleRegistroComponent', () => {
+  let component: DetalleRegistroComponent;
+  let fixture: ComponentFixture<DetalleRegistroComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListImagenTacComponent ]
+      declarations: [ DetalleRegistroComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ListImagenTacComponent);
+    fixture = TestBed.createComponent(DetalleRegistroComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -9,42 +9,27 @@
     </a>
     <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav mr-auto">
-            <!-- <li class="nav-item" *ngIf="isLogged && isAdmin" >
-                <a class="nav-link  "  routerLink="/usuario/listar"><i class="fa-solid fa-user"></i> Usuarios</a>
-            </li>
-            <li class="nav-item" *ngIf="isLogged" >
-                <a class="nav-link  "  routerLink="/candidato/listar"><i class="fas fa-house" ></i> Candidatos</a>
-            </li>
-            <li class="nav-item " *ngIf="!isLogged">
-                <a class="nav-link "  routerLink="/auth/login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
-            </li>
-            <li class="nav-item " *ngIf="isLogged" (click)="onLogOut()">
-                <a class="nav-link "  ><i class="fas fa-door-open"></i> Cerrar Sesión</a>
-            </li>   -->
+            <div class="dropdown">
+                <li class="nav-item"  >
+                    <a class="nav-link  " id="dropdownMenuButton" 
+                        style="cursor: pointer;"
+                        data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-gear"></i> ADMIN
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" routerLink="/usuario/listar"><i class="fa-solid fa-user"></i> Usuarios</a>
+                        <a class="dropdown-item" routerLink="/tipoUsuarios/listar"><i class="fa-solid fa-users-between-lines"></i> Tipo Usuarios</a>
+                        <a class="dropdown-item" routerLink="/tipoRegistros/listar"><i class="fa-solid fa-bars"></i> Tipo Registro</a>
+                        <a class="dropdown-item" routerLink="/parametros/listar"><i class="fa-solid fa-pen-to-square"></i> Parametros</a>
+                    </div>
+                </li>                
+            </div>
             <li class="nav-item" >
-                <a class="nav-link  "  routerLink="/usuario/listar"><i class="fa-solid fa-user"></i> Usuarios</a>
-            </li>
-            <li class="nav-item" >
-                <a class="nav-link  "  routerLink="/tipoUsuarios/listar"><i class="fa-solid fa-user"></i> Tipo Usuarios</a>
-            </li>
-            <li class="nav-item" >
-                <a class="nav-link  "  routerLink="/tipoRegistros/listar"><i class="fa-solid fa-user"></i> Tipo Registro</a>
-            </li>
-            <li class="nav-item" >
-                <a class="nav-link  "  routerLink="/registros/listar"><i class="fa-solid fa-user"></i> Registros</a>
-            </li>
-            <li class="nav-item" >
-                <a class="nav-link  "  routerLink="/parametros/listar"><i class="fa-solid fa-user"></i> Parametros</a>
-            </li>
-            <li class="nav-item" >
-                <a class="nav-link  "  routerLink="/imagenesTac/listar"><i class="fa-solid fa-user"></i> Imagenes Tac</a>
+                <a class="nav-link  "  routerLink="/registros/listar"><i class="fa-solid fa-square-poll-horizontal"></i> Resultados</a>
             </li>
             <li class="nav-item"  >
-                <a class="nav-link  "  routerLink="/view"><i class="fas fa-house" ></i> Visualizador</a>
+                <a class="nav-link  "  routerLink="/view"><i class="fa-solid fa-binoculars"></i> Visualizador</a>
             </li>
-            <!-- <li class="nav-item ">
-                <a class="nav-link "  routerLink="/auth/login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
-            </li> -->
             <li class="nav-item " (click)="onLogOut()" style="cursor: pointer;">
                 <a class="nav-link "  ><i class="fas fa-door-open"></i> Cerrar Sesión</a>
             </li>  
