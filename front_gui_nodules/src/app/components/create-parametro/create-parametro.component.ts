@@ -22,6 +22,7 @@ export class CreateParametroComponent implements OnInit {
     this.parametroForm = this.fb.group({
       parametro: ['',[Validators.required]],
       valor: ['',[Validators.required]],
+      descripcion: ['',[Validators.required]],
       usuarioModifica: [1],
     });
   }
