@@ -71,15 +71,18 @@ export class App {
    */
   #listenerHandler = new ListenerHandler();
 
-  printImage(coordinates) {
-    console.log("perras en 4", coordinates);
-
+  printImage(coordinates, files) {
     if (coordinates.length > 0) {
       coordinates.forEach((coord) => {
+        const formData = new FormData();
+        formData.append("file", files[0]);
+        formData.append("x", coord[0]);
+        formData.append("y", coord[1]);
+        formData.append("z", coord[2]);
+  
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "http://localhost:5000/slice");
-        xhr.setRequestHeader("Content-Type", "application/json");
-
+  
         // Configura el evento 'load' para manejar la respuesta
         xhr.onload = function () {
           if (xhr.status === 200) {
@@ -88,27 +91,17 @@ export class App {
             console.log("Respuesta del servidor:", respuesta);
           } else {
             // La solicitud falló con un código de estado distinto a 200
-            console.error(
-              "Error en la solicitud. Código de estado:",
-              xhr.status
-            );
+            console.error("Error en la solicitud. Código de estado:", xhr.status);
           }
         };
-
+  
         // Manejar errores de red
         xhr.onerror = function () {
           console.error("Error de red al realizar la solicitud.");
         };
-
-        // Enviar la solicitud con los datos JSON
-        xhr.send(
-          JSON.stringify({
-            filename: "C:/Users/santi/Downloads/dicom_viewer_0002/0002.DCM",
-            x_start: coord[0],
-            y_start: coord[1],
-            z_start: coord[2]
-          })
-        );
+  
+        // Enviar la solicitud con los datos FormData
+        xhr.send(formData);
       });
     }
   }
