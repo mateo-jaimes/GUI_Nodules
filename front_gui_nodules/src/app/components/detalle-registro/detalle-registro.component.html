@@ -1,7 +1,27 @@
 <app-menu></app-menu>
 <div class="wrapper" style="width: 70%; margin-left: auto; margin-right: auto;">
     <h4  class="mb-4 mt-5 col-md-12 col-sm-12 col-12 text-center col-light">Detalle</h4>
-    <div class="json-container">
-        <pre>{{jsonString}}</pre>
+    <div class="image-container">
+        <img [src]="'data:image/png;base64,' + resultDetail.imagenPrevia" alt="Imagen">
     </div>
+    <div class="data-container">
+        <div class="data-block">
+          <p><strong>ID</strong><br> {{ resultDetail.id }}</p>
+          <p><strong>Fecha</strong><br> {{ resultDetail.fecha }}</p>
+          <p><strong>UUID</strong><br> {{ resultDetail.uuid }}</p>
+        </div>
+        <div class="data-block">
+          <p><strong>Nombre del Paciente</strong><br> {{ resultDetail.nombrePaciente }}</p>
+          <p><strong>Nombre del Estudio</strong><br> {{ resultDetail.nombreEstudio }}</p>
+        </div>
+        <div class="data-block">
+          <p><strong>Usuario</strong><br> {{ resultDetail.usuario.nombre }} {{ resultDetail.usuario.apellido }}</p>
+          <p><strong>Email</strong><br> {{ resultDetail.usuario.email }}</p>
+          <p><strong>Teléfono</strong><br> {{ resultDetail.usuario.telefono }}</p>
+        </div>
+        <div class="data-block" [ngStyle]="{ 'background-color': getColorBackground(resultDetail.tipoRegistro.id) }">
+          <p><strong>Resultado Clasificación</strong><br> {{ resultDetail.tipoRegistro.tipoRegistro }}</p>
+        </div>
+      </div>
+      
 </div>

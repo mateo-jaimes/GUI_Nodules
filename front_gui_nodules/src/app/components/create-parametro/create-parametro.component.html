@@ -16,6 +16,11 @@
            <input type="text" class="form-control" formControlName="valor" id="validationServer013" 
              required name="valor" >
          </div>
+         <div class="col-md-4 mb-3">
+           <label for="validationServer013">Descripción</label>
+           <input type="text" class="form-control" formControlName="descripcion" id="validationServer013" 
+             required name="descripcion" >
+         </div>
        </div>
        <button class="btn btn-outline-success btn-block offset-md-4 rounded mt-1" (click)="onCreate()" [disabled]="parametroForm.invalid" *ngIf="!edit">Crear</button>
        <button class="btn btn-outline-success btn-block offset-md-4 rounded mt-1" (click)="onEdit()" [disabled]="parametroForm.invalid" *ngIf="edit">Editar</button>
