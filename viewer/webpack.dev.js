@@ -6,15 +6,15 @@ module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
-    open: '/tests',
+    open: '/tests/',
     static: [
       {
         directory: './dist',
         publicPath: '/dist'
       },
       {
-        directory: './tests',
-        publicPath: '/tests'
+        directory: './tests/',
+        publicPath: '/tests/'
       },
       {
         directory: './decoders',
