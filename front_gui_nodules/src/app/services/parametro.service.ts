@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 })
 export class ParametroService {
 
-  authUrl = environment.authUrl+'api/parametros';
+  authUrl = environment.authUrl+'parametros';
 
   constructor(private httpClient:HttpClient) { }
 
