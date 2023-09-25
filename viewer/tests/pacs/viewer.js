@@ -22,6 +22,7 @@ function procces() {
   }
 }
 
+
 function viewerSetup() {
   // logger level (optional)
   dwv.logger.level = dwv.logger.levels.INFO;

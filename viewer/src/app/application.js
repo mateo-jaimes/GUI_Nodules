@@ -76,9 +76,9 @@ export class App {
       coordinates.forEach((coord) => {
         const formData = new FormData();
         formData.append("file", files[0]);
-        formData.append("x_start", coord[0]);
-        formData.append("y_start", coord[1]);
-        formData.append("z_start", coord[2]);
+        formData.append("x", coord[0]);
+        formData.append("y", coord[1]);
+        formData.append("z", coord[2]);
   
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "http://localhost:5000/slice");
