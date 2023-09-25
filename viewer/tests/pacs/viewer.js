@@ -18,7 +18,7 @@ const _dicomWeb = false;
  */
 function procces() {
   if (files != null) {
-    _app.printImage(coordinates, files);
+    console.log(_app.Slice(coordinates, files));
   }
 }
 

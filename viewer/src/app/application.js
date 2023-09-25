@@ -17,6 +17,7 @@ import { DataController } from "./dataController";
 import { OverlayData } from "../gui/overlayData";
 import { toolList, toolOptions } from "../tools";
 import { binderList } from "../gui/stage";
+import Swal from "sweetalert2";
 
 // doc imports
 /* eslint-disable no-unused-vars */
@@ -71,39 +72,85 @@ export class App {
    */
   #listenerHandler = new ListenerHandler();
 
-  printImage(coordinates, files) {
+  Slice(coordinates, files) {
     if (coordinates.length > 0) {
-      coordinates.forEach((coord) => {
+      const promise = coordinates.map((coord) =>{
         const formData = new FormData();
         formData.append("file", files[0]);
         formData.append("x", coord[0]);
         formData.append("y", coord[1]);
         formData.append("z", coord[2]);
-  
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://localhost:5000/slice");
-  
-        // Configura el evento 'load' para manejar la respuesta
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            // La solicitud se completó con éxito (código de estado 200)
-            const respuesta = JSON.parse(xhr.responseText);
-            console.log("Respuesta del servidor:", respuesta);
-          } else {
-            // La solicitud falló con un código de estado distinto a 200
-            console.error("Error en la solicitud. Código de estado:", xhr.status);
-          }
-        };
-  
-        // Manejar errores de red
-        xhr.onerror = function () {
-          console.error("Error de red al realizar la solicitud.");
-        };
-  
-        // Enviar la solicitud con los datos FormData
-        xhr.send(formData);
+        this.sendRequest(formData);
       });
+
+      return Promise.all(promise);
     }
+  }
+
+  sendRequest(formData){
+    return new Promise((resolve, reject) => {const xhr = new XMLHttpRequest();
+      var up = false;
+      xhr.open(
+        "POST",
+        "https://f4v094wkui.execute-api.us-east-1.amazonaws.com/dev/api-ms-dicom-slicer/slice"
+      );
+
+      // Configura el evento 'load' para manejar la respuesta
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          // La solicitud se completó con éxito (código de estado 200)
+          const respuesta = JSON.parse(xhr.responseText);
+          console.log("Respuesta del servidor:", respuesta);
+          // Abre una nueva ventana del navegador con un mensaje
+          Swal.fire({
+            title: "¡Hola!",
+            text:
+              coordinates.length == 1
+                ? "Deseas ver el detalle de tu imagen?"
+                : "Deseas ver tus resultados?",
+            icon: "info",
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar",
+            showCancelButton: true,
+          }).then((result) => {
+            if (result.value) {
+              var url =
+                coordinates.length == 1
+                  ? "http://localhost:4200/registros/view/" +
+                    respuesta.message
+                  : "http://localhost:4200/registros/listar";
+              console.log(url);
+              window.open(url);
+            }
+          });
+          up = true;
+        } else {
+          // La solicitud falló con un código de estado distinto a 200
+          console.error(
+            "Error en la solicitud. Código de estado:",
+            xhr.status
+          );
+        }
+      };
+
+      // Configura el evento 'error' para manejar la respuesta
+      xhr.timeout = 6000; // Establece un tiempo de espera de 10 segundos (puedes ajustarlo según tus necesidades)
+      xhr.ontimeout = function () {
+        Swal.fire({
+          title: "ERROR",
+          text: "Tiempo de espera agotado",
+          icon: "error"
+        })
+        // Aquí puedes mostrar un mensaje de alerta o realizar otras acciones necesarias.
+      };
+
+      // Manejar errores de red
+      xhr.onerror = function () {
+        console.error("Error de red al realizar la solicitud.");
+      };
+
+      // Enviar la solicitud con los datos FormData
+      xhr.send(formData);})
   }
 
   /**
