@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 })
 export class RegistroService {
 
-  authUrl = environment.authUrl+'api/registros';
+  authUrl = environment.authUrl+'registros';
 
   constructor(private httpClient:HttpClient) { }
 

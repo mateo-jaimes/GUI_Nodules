@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 })
 export class TipoRegistroService {
 
-  authUrl = environment.authUrl+'api/tipoRegistros';
+  authUrl = environment.authUrl+'tipoRegistros';
 
   constructor(private httpClient:HttpClient) { }
 
