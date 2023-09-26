@@ -21,7 +21,10 @@ export class DetalleRegistroComponent implements OnInit {
   jsonString:string="";
   imageShow:string="data:image/png;";
 
+  isLoading:boolean=false;
+
   ngOnInit(): void {
+    this.isLoading = true;
     const params = this.activatedRoute.snapshot.params;
     this.registroUuid = params['uuid'];
     this.getResultDetails();
@@ -59,12 +62,14 @@ export class DetalleRegistroComponent implements OnInit {
     console.log(this.registroUuid);
     this.registroService.getByUuid(this.registroUuid).subscribe({
       next:res=>{
+        this.isLoading = false;
         console.log(res);
         this.resultDetail=res;
         this.imageShow += this.resultDetail.imagenPrevia;
         this.jsonString = JSON.stringify(this.resultDetail, null, 2);
       },
       error:err=>{
+        this.isLoading = false;
         Swal.fire({
           title: 'Error',
           text:err.error.exception,

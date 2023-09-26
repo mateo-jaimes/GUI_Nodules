@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  authUrl: 'https://f4v094wkui.execute-api.us-east-1.amazonaws.com/dev/api-ms-admon/',
+  authUrl:'http://localhost:8081/api-ms-admon/'
+  // authUrl: 'https://f4v094wkui.execute-api.us-east-1.amazonaws.com/dev/api-ms-admon/',
 };
 
 /*

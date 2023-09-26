@@ -18,6 +18,8 @@ export class CreateParametroComponent implements OnInit {
   edit:boolean = false;
   parametroEdit:any={};
 
+  isLoading:boolean=false;
+
   constructor(private router:Router, public fb: FormBuilder, private activatedRoute: ActivatedRoute, private parametroService: ParametroService) { 
     this.parametroForm = this.fb.group({
       parametro: ['',[Validators.required]],
@@ -28,21 +30,26 @@ export class CreateParametroComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
     const params = this.activatedRoute.snapshot.params;
     this.parametroId = params['id'];
     if(this.parametroId !== undefined){
       this.edit=true;
       this.getParametroEdit()
-    } 
+    } else{
+      this.isLoading = false;
+    }
   }
 
   getParametroEdit(){
     this.parametroService.getById(this.parametroId).subscribe({
       next:res=>{
+        this.isLoading = false;
         this.parametroEdit=res;
         this.fillForm();
       },
       error:err=>{
+        this.isLoading = false;
         Swal.fire({
           title: 'Error',
           text:err.error.exception,
@@ -60,8 +67,10 @@ export class CreateParametroComponent implements OnInit {
 
 
   onCreate(){
+    this.isLoading = true;
       this.parametroService.create(this.parametroForm.value).subscribe({
         next:res=>{
+          this.isLoading = false;
           Swal.fire({
             title: 'Creación Exitosa',
             icon: 'success',
@@ -71,6 +80,7 @@ export class CreateParametroComponent implements OnInit {
           })
         },
         error:err=>{
+          this.isLoading = false;
           Swal.fire({
             title: 'Error',
             text: err.message,
@@ -82,8 +92,10 @@ export class CreateParametroComponent implements OnInit {
   }
 
   onEdit(){
+    this.isLoading = true;
       this.parametroService.update(this.parametroId,this.parametroForm.value).subscribe({
         next:res=>{
+          this.isLoading = false;
           Swal.fire({
             title: 'Edición Exitosa',
             icon: 'success',
@@ -93,6 +105,7 @@ export class CreateParametroComponent implements OnInit {
           })
         },
         error:err=>{
+          this.isLoading = false;
           Swal.fire({
             title: 'Error',
             text:err.error.exception,
