@@ -7,9 +7,9 @@
                 <tr>
                     <th>Id</th>
                     <th>Fecha</th>
-                    <th>UUID</th>
                     <th>Tipo Registro</th>
-                    <th>Usuario</th>
+                    <th>Paciente</th>
+                    <th>Estado Visualizción</th>
                     <th>Ver Detalle</th>
                     <th>Eliminar</th>
                 </tr>
@@ -18,12 +18,20 @@
                 <tr *ngFor="let registro of registros">
                     <td>{{registro.id}}</td>
                     <td>{{registro.fecha | date:'YYYY-MM-dd'}}</td>
-                    <td>{{registro.uuid}}</td>
                     <td>{{registro.tipoRegistro.tipoRegistro}}</td>
-                    <td>{{registro.usuario.nombre + " " + registro.usuario.apellido}}</td>
-                    <!-- <td><button class="btn btn-outline-warning" routerLink="/registros/editar/{{registro.id}}"><i class="fa-solid fa-eye"></i></button></td> -->
-                    <td><button class="btn btn-outline-warning" routerLink="/registros/view/{{registro.uuid}}"><i class="fa-solid fa-eye"></i></button></td>
-                    <td><button class="btn btn-outline-danger" (click)="borrar(registro)"><i class="fa-solid fa-trash-can"></i></button></td>
+                    <td>{{registro.nombrePaciente}}</td>
+                    <td >
+                        <button type="button" class="btn" [ngClass]="{'btn-success': !registro.seen, 'btn-danger': registro.seen}" style="cursor:default;">
+                            <ng-container *ngIf="registro.seen; else icon">
+                                <i class="fa-solid fa-check-circle"></i>
+                            </ng-container>
+                            <ng-template #icon>
+                                <i class="fa-solid fa-eye"></i>
+                            </ng-template>
+                        </button>
+                    </td>
+                    <td><button class="btn btn-outline-warning" (click)="this.redirect(registro)"><i class="fa-solid fa-eye"></i></button></td>
+                    <td><button class="btn btn-outline-danger" (click)="confirmarEliminar(registro)"><i class="fa-solid fa-trash-can"></i></button></td>
                 </tr>
             </tbody>
         </table>
@@ -31,4 +39,11 @@
     <div class="mx-auto" style="width: 200px;">
         <button type="button" class="btn btn-success"  [routerLink]="['/registros/crear']">Crear Registros</button>
       </div>
+</div>
+
+<div class="overlay" *ngIf="isLoading">
+    <div class="spinner">
+        <div class="loader"></div>
+        <p>Loading...</p>
+    </div>
 </div>

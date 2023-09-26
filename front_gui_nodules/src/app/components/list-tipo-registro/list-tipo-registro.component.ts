@@ -14,16 +14,21 @@ export class ListTipoRegistroComponent implements OnInit {
 
   tipoRegistro:any[] = [];
 
+  isLoading:boolean=false;
+
   ngOnInit(): void {
+    this.isLoading = true;
     this.getTipoRegistros();
   }
 
   getTipoRegistros(){
     this.tipoRegistroService.lista().subscribe({
       next:(res:any)=>{
+        this.isLoading = false;
         this.tipoRegistro=res;
       },
       error:err=>{
+        this.isLoading = false;
         Swal.fire({
           title: 'Error',
           text:err.error.exception,
@@ -34,13 +39,31 @@ export class ListTipoRegistroComponent implements OnInit {
     })
   }
 
+  confirmarEliminar(tipoRegistro:any){
+    Swal.fire({
+      title: 'Desea eliminar el tipo registro ?',
+      icon: 'question',
+      showCloseButton:true,
+      confirmButtonText:"Aceptar",
+      confirmButtonColor: "#DD6B55",
+    })
+    .then((result)=>{
+      if(result.value){
+        this.borrar(tipoRegistro);
+      }
+    });
+  }
 
-  borrar(tipoUser:any){
-    this.tipoRegistroService.delete(tipoUser.id).subscribe({
+
+  borrar(tipoRegistro:any){
+    this.isLoading = true;
+    this.tipoRegistroService.delete(tipoRegistro.id).subscribe({
       next:res=>{
+        this.isLoading = false;
         this.ngOnInit();
       },
       error:err=>{
+        this.isLoading = false;
         Swal.fire({
           title: 'Error',
           text:err.error.exception,

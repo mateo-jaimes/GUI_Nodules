@@ -29,6 +29,9 @@ export class RegistroService {
   public update(id : string, registro: any): Observable<any>{
     return this.httpClient.put<any>(`${this.authUrl}/${id}`, registro);
   }
+  public updateSeen(uuid : string, seen: boolean, registro: any): Observable<any>{
+    return this.httpClient.put<any>(`${this.authUrl}/updateSeenStatus/${uuid}/${seen}`, registro);
+  }
   public create(registro: any): Observable<any>{
     return this.httpClient.post<any>(this.authUrl,registro);
   }

@@ -14,7 +14,10 @@ export class ListUsuarioComponent implements OnInit {
 
   users:any[] = [];
 
+  isLoading:boolean=false;
+
   ngOnInit(): void {
+    this.isLoading = true;
     this.getUsers();
   }
 
@@ -22,11 +25,13 @@ export class ListUsuarioComponent implements OnInit {
     this.usuarioService.lista().subscribe({
       next:(res:any)=>{
         if(res){
+          this.isLoading = false;
           this.users=res;
           console.log(this.users);
         }
       },
       error:err=>{
+        this.isLoading = false;
         Swal.fire({
           title: 'Error',
           text:err.error.exception,
@@ -37,13 +42,31 @@ export class ListUsuarioComponent implements OnInit {
     })
   }
 
+  confirmarEliminar(user:any){
+    Swal.fire({
+      title: 'Desea eliminar el usuario ?',
+      icon: 'question',
+      showCloseButton:true,
+      confirmButtonText:"Aceptar",
+      confirmButtonColor: "#DD6B55",
+    })
+    .then((result)=>{
+      if(result.value){
+        this.borrar(user);
+      }
+    });
+  }
+
 
   borrar(user:any){
+    this.isLoading = true;
     this.usuarioService.delete(user.id).subscribe({
       next:res=>{
+        this.isLoading = false;
         this.ngOnInit();
       },
       error:err=>{
+        this.isLoading = false;
         Swal.fire({
           title: 'Error',
           text:err.error.exception,

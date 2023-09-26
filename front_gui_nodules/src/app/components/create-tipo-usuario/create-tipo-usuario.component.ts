@@ -19,6 +19,8 @@ export class CreateTipoUsuarioComponent implements OnInit {
   tipoUserEdit:any={};
   tipoUsaurioList:any=[];
 
+  isLoading:boolean=false;
+
   constructor(private router:Router, public fb: FormBuilder, private activatedRoute: ActivatedRoute, private tipoUsuarioService: TipoUsuarioService) { 
     this.tipoUsuarioForm = this.fb.group({
       rol: ['',[Validators.required]],
@@ -26,17 +28,21 @@ export class CreateTipoUsuarioComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
     const params = this.activatedRoute.snapshot.params;
     this.tipoUsuarioId = params['id'];
     if(this.tipoUsuarioId !== undefined){
       this.edit=true;
       this.getTipoUsuarioEdit()
-    } 
+    }else{
+      this.isLoading = false;
+    }
   }
 
   getTipoUsuarioEdit(){
     this.tipoUsuarioService.getById(this.tipoUsuarioId).subscribe({
       next:res=>{
+        this.isLoading = false;
         this.tipoUserEdit=res;
         this.fillForm();
       },
@@ -52,8 +58,10 @@ export class CreateTipoUsuarioComponent implements OnInit {
 
 
   onCreate(){
+    this.isLoading = true;
       this.tipoUsuarioService.create(this.tipoUsuarioForm.value).subscribe({
         next:res=>{
+          this.isLoading = false;
           Swal.fire({
             title: 'Creación Exitosa',
             icon: 'success',
@@ -63,6 +71,7 @@ export class CreateTipoUsuarioComponent implements OnInit {
           })
         },
         error:err=>{
+          this.isLoading = false;
           Swal.fire({
             title: 'Error',
             text: err.message,

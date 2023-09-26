@@ -14,16 +14,21 @@ export class ListTipoUsuarioComponent implements OnInit {
 
   tipoUsuarios:any[] = [];
 
+  isLoading:boolean=false;
+
   ngOnInit(): void {
+    this.isLoading = true;
     this.getTipoUsuarios();
   }
 
   getTipoUsuarios(){
     this.tipoUsuarioService.lista().subscribe({
       next:(res:any)=>{
+        this.isLoading = false;
         this.tipoUsuarios=res;
       },
       error:err=>{
+        this.isLoading = false;
         Swal.fire({
           title: 'Error',
           text:err.error.exception,
@@ -34,13 +39,31 @@ export class ListTipoUsuarioComponent implements OnInit {
     })
   }
 
+  confirmarEliminar(tipoUser:any){
+    Swal.fire({
+      title: 'Desea eliminar el tipo usuario ?',
+      icon: 'question',
+      showCloseButton:true,
+      confirmButtonText:"Aceptar",
+      confirmButtonColor: "#DD6B55",
+    })
+    .then((result)=>{
+      if(result.value){
+        this.borrar(tipoUser);
+      }
+    });
+  }
+
 
   borrar(tipoUser:any){
+    this.isLoading = true;
     this.tipoUsuarioService.delete(tipoUser.id).subscribe({
       next:res=>{
+        this.isLoading = false;
         this.ngOnInit();
       },
       error:err=>{
+        this.isLoading = false;
         Swal.fire({
           title: 'Error',
           text:err.error.exception,

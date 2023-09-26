@@ -18,6 +18,8 @@ export class CreateTipoRegistroComponent implements OnInit {
   edit:boolean = false;
   tipoRegistroEdit:any={};
 
+  isLoading:boolean=false;
+
   constructor(private router:Router, public fb: FormBuilder, private activatedRoute: ActivatedRoute, private tipoRegistroService: TipoRegistroService) { 
     this.tipoRegistroForm = this.fb.group({
       tipoRegistro: ['',[Validators.required]],
@@ -25,21 +27,26 @@ export class CreateTipoRegistroComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
     const params = this.activatedRoute.snapshot.params;
     this.tipoRegistroId = params['id'];
     if(this.tipoRegistroId !== undefined){
       this.edit=true;
       this.getTipoRegistroEdit()
-    } 
+    } else {
+      this.isLoading = false;
+    }
   }
 
   getTipoRegistroEdit(){
     this.tipoRegistroService.getById(this.tipoRegistroId).subscribe({
       next:res=>{
+        this.isLoading = false;
         this.tipoRegistroEdit=res;
         this.fillForm();
       },
       error:err=>{
+        this.isLoading = false;
         Swal.fire({
           title: 'Error',
           text:err.error.exception,
@@ -56,8 +63,10 @@ export class CreateTipoRegistroComponent implements OnInit {
 
 
   onCreate(){
+    this.isLoading = true;
       this.tipoRegistroService.create(this.tipoRegistroForm.value).subscribe({
         next:res=>{
+          this.isLoading = false;
           Swal.fire({
             title: 'Creación Exitosa',
             icon: 'success',
@@ -67,6 +76,7 @@ export class CreateTipoRegistroComponent implements OnInit {
           })
         },
         error:err=>{
+          this.isLoading = false;
           Swal.fire({
             title: 'Error',
             text: err.message,
@@ -78,8 +88,10 @@ export class CreateTipoRegistroComponent implements OnInit {
   }
 
   onEdit(){
+    this.isLoading = true;
       this.tipoRegistroService.update(this.tipoRegistroForm.value,this.tipoRegistroId).subscribe({
         next:res=>{
+          this.isLoading = false;
           Swal.fire({
             title: 'Edición Exitosa',
             icon: 'success',
@@ -89,6 +101,7 @@ export class CreateTipoRegistroComponent implements OnInit {
           })
         },
         error:err=>{
+          this.isLoading = false;
           Swal.fire({
             title: 'Error',
             text:err.error.exception,

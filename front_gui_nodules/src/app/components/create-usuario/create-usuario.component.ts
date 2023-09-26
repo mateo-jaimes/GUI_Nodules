@@ -19,6 +19,8 @@ export class CreateUsuarioComponent implements OnInit {
   userEdit:any={};
   tipoUsaurioList:any=[];
 
+  isLoading:boolean=false;
+
   constructor(private router:Router, public fb: FormBuilder, private activatedRoute: ActivatedRoute, private usuarioService: UsuarioService, private tipoUsuarioServie:TipoUsuarioService) { 
     this.userForm = this.fb.group({
       nombre: ['',[Validators.required]],
@@ -32,6 +34,7 @@ export class CreateUsuarioComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
     const params = this.activatedRoute.snapshot.params;
     this.getTipoUsuarios();
     this.userId = params['id'];
@@ -42,6 +45,7 @@ export class CreateUsuarioComponent implements OnInit {
   }
 
   getTipoUsuarios(){
+    this.isLoading = false;
     this.tipoUsuarioServie.lista().subscribe({
       next:(res:any)=>{
         console.log(res);
@@ -54,8 +58,10 @@ export class CreateUsuarioComponent implements OnInit {
   }
 
   getUserEdit(){
+    this.isLoading = true;
     this.usuarioService.getById(this.userId).subscribe({
       next:res=>{
+        this.isLoading = false;
         console.log(res);
         this.userEdit=res;
         this.fillForm();
@@ -78,9 +84,11 @@ export class CreateUsuarioComponent implements OnInit {
 
 
   onCreate(){
+    this.isLoading = true;
     console.log(this.userForm.value);
       this.usuarioService.create(this.userForm.value).subscribe({
         next:res=>{
+          this.isLoading = false;
           Swal.fire({
             title: 'Creación Exitosa',
             icon: 'success',
@@ -90,14 +98,22 @@ export class CreateUsuarioComponent implements OnInit {
           })
         },
         error:err=>{
-
+          this.isLoading = false;
+          Swal.fire({
+            title: 'Error',
+            text: err.message,
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          })
         },
       })
   }
 
   onEdit(){
+    this.isLoading = true;
     this.usuarioService.update(this.userId,this.userForm.value).subscribe({
       next:res=>{
+        this.isLoading = false;
         Swal.fire({
           title: 'Edició Exitosa',
           icon: 'success',
@@ -107,7 +123,13 @@ export class CreateUsuarioComponent implements OnInit {
         })
       },
       error:err=>{
-
+        this.isLoading = false;
+        Swal.fire({
+          title: 'Error',
+          text: err.message,
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        })
       },
     })
   }

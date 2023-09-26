@@ -13,17 +13,22 @@ export class ListParametroComponent implements OnInit {
 
   parametros:any[] = [];
 
+  isLoading:boolean=false;
+
   ngOnInit(): void {
+    this.isLoading = true;
     this.getTipoRegistros();
   }
 
   getTipoRegistros(){
     this.parametroService.lista().subscribe({
       next:(res:any)=>{
+        this.isLoading = false;
         this.parametros=res;
         console.log(this.parametros);
       },
       error:err=>{
+        this.isLoading = false;
         Swal.fire({
           title: 'Error',
           text:err.error.exception,
@@ -34,13 +39,31 @@ export class ListParametroComponent implements OnInit {
     })
   }
 
+  confirmarEliminar(parametro:any){
+    Swal.fire({
+      title: 'Desea eliminar el parametro ?',
+      icon: 'question',
+      showCloseButton:true,
+      confirmButtonText:"Aceptar",
+      confirmButtonColor: "#DD6B55",
+    })
+    .then((result)=>{
+      if(result.value){
+        this.borrar(parametro);
+      }
+    });
+  }
 
-  borrar(tipoUser:any){
-    this.parametroService.delete(tipoUser.id).subscribe({
+
+  borrar(parametro:any){
+    this.isLoading = true;
+    this.parametroService.delete(parametro.id).subscribe({
       next:res=>{
+        this.isLoading = false;
         this.ngOnInit();
       },
       error:err=>{
+        this.isLoading = false;
         Swal.fire({
           title: 'Error',
           text:err.error.exception,
