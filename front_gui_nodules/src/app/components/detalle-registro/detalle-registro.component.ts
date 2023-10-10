@@ -17,11 +17,12 @@ export class DetalleRegistroComponent implements OnInit {
     ) { }
 
   registroUuid:string = '';
-  resultDetail:any={};
+  resultDetail:any=null;
   jsonString:string="";
   imageShow:string="data:image/png;";
 
   isLoading:boolean=false;
+  processing:boolean=false;
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -59,10 +60,10 @@ export class DetalleRegistroComponent implements OnInit {
     }
   }
   getResultDetails(){
-    console.log(this.registroUuid);
     this.registroService.getByUuid(this.registroUuid).subscribe({
       next:res=>{
         this.isLoading = false;
+        this.processing = false;
         console.log(res);
         this.resultDetail=res;
         this.imageShow += this.resultDetail.imagenPrevia;
@@ -70,12 +71,16 @@ export class DetalleRegistroComponent implements OnInit {
       },
       error:err=>{
         this.isLoading = false;
-        Swal.fire({
-          title: 'Error',
-          text:err.error.exception,
-          icon: 'error',
-          confirmButtonText: 'Aceptar',
-        });
+        if(err.error.exception == "NotFoundException"){
+          this.processing = true;
+        }else{
+          Swal.fire({
+            title: 'Error',
+            text:err.error.exception,
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          });
+        }
       }
     })
   }
