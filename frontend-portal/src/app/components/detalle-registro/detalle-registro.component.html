@@ -1,5 +1,5 @@
 <app-menu></app-menu>
-<div class="wrapper" style="width: 70%; margin-left: auto; margin-right: auto;">
+<div class="wrapper" style="width: 70%; margin-left: auto; margin-right: auto;" *ngIf="resultDetail != null">
     <h4  class="mb-4 mt-5 col-md-12 col-sm-12 col-12 text-center col-light">Detalle</h4>
     <div class="image-container">
         <img [src]="'data:image/png;base64,' + resultDetail.imagenPrevia" alt="Imagen">
@@ -21,14 +21,34 @@
         </div>
         <div class="data-block" [ngStyle]="{ 'background-color': getColorBackground(resultDetail.tipoRegistro.id) }">
           <p><strong>Resultado Clasificación</strong><br> {{ resultDetail.tipoRegistro.tipoRegistro }}</p>
+          <i *ngIf="resultDetail.tipoRegistro.id === 1 || resultDetail.tipoRegistro.id === 2"
+              class="fa-solid fa-triangle-exclamation"
+              style="font-size: 80px; display: block; text-align: center; margin-top: 10px;"
+          ></i>
+          <i *ngIf="resultDetail.tipoRegistro.id === 3 || resultDetail.tipoRegistro.id === 4"
+              class="fa-solid fa-circle-check"
+              style="font-size: 80px; display: block; text-align: center; margin-top: 10px;"
+          ></i>
         </div>
       </div>
       
 </div>
 
-<div class="overlay" *ngIf="isLoading">
+<div class="overlay" *ngIf="processing">
   <div class="spinner">
       <div class="loader"></div>
       <p>Loading...</p>
+  </div>
+</div>
+
+<div class="overlay" *ngIf="processing">
+  <div class="spinner">
+    <div class="loader"></div>
+    <p>SU SOLICITUD SE ESTA PROCESANDO</p>
+    <div class="btn-group">
+      <button class="btn btn-outline-success btn-block rounded mt-1" (click)="ngOnInit()"><i class="fa-solid fa-magnifying-glass"></i>Volver a consultar resultado</button>
+      <div class="mx-2"></div>
+      <button class="btn btn-outline-primary btn-block rounded mt-1" (click)="ngOnInit()">Volver a menu</button>
+    </div>
   </div>
 </div>
