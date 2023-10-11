@@ -2,5 +2,5 @@ FROM node:14
 WORKDIR /app
 COPY . /app
 RUN npm install
-EXPOSE 4200
+EXPOSE 80
 CMD ["npm", "start"]

@@ -116,9 +116,9 @@ export class App {
             if (result.value) {
               var url =
                 coordinates.length == 1
-                  ? "http://localhost:4200/registros/view/" +
+                  ? "http://localhost:80/registros/view/" +
                     respuesta.message
-                  : "http://localhost:4200/registros/listar";
+                  : "http://localhost:80/registros/listar";
               console.log(url);
               window.open(url);
             }
