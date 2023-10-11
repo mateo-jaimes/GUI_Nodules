@@ -56,7 +56,7 @@
     "webpack-merge": "^5.9.0"
   },
   "scripts": {
-    "start": "webpack-dev-server --open --host 0.0.0.0",
+    "start": "webpack serve --config webpack.dev.js --open --host 0.0.0.0",
     "pack": "webpack --config webpack.prod.js",
     "build": "yarn run pack && yarn run types && yarn run api",
     "lint": "eslint -c '.eslint-full.js' 'src/**/*.js' 'tests/**/*.js' '*.js'",
