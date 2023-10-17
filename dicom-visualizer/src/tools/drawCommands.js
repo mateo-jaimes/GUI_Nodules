@@ -96,6 +96,15 @@ export class DrawGroupCommand {
     return 'Draw-' + this.#name;
   }
 
+  //   /**
+  //  * Get the current scroll index value.
+  //  *
+  //  * @returns {object} The value.
+  //  */
+  //   getCurrentScrollIndexValue() {
+  //     return this.#view.getCurrentIndex().get(this.#view.getScrollIndex());
+  //   }
+
   /**
    * Execute the command.
    *
@@ -105,9 +114,12 @@ export class DrawGroupCommand {
     // add the group to the parent (in case of undo/redo)
     this.#parent.add(this.#group);
     // draw
+    const layer = this.#layer.getKonvaLayer();
+
     this.#layer.getKonvaLayer().draw();
     // callback
     if (!this.#isSilent) {
+      console.log(layer)
       /**
        * Draw create event.
        *
@@ -115,11 +127,17 @@ export class DrawGroupCommand {
        * @type {object}
        * @property {string} id The id of the created draw.
        * @property {string} dataid The associated data id.
+       * @property {string} x The associated x.
+       * @property {string} y The associated x.
        */
       this.onExecute({
         type: 'drawcreate',
         id: this.#group.id(),
-        dataid: this.#layer.getDataId()
+        dataid: this.#layer.getDataId(),
+        // eslint-disable-next-line max-len
+        x: layer.children[0].children[layer.children[0].children.length - 1].children[1].attrs.x,
+        // eslint-disable-next-line max-len
+        y: layer.children[0].children[layer.children[0].children.length - 1].children[1].attrs.y
       });
     }
   }

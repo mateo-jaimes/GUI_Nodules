@@ -8,6 +8,8 @@ let _app = null;
 let _tools = null;
 let coordinates = [];
 let files = null;
+let zLevel = 0;
+let prevLevel = -1;
 
 // viewer options
 let _layout = "one";
@@ -83,7 +85,9 @@ function viewerSetup() {
     WindowLevel: {},
     ZoomAndPan: {},
     Opacity: {},
-    Draw: { options: ["Rectangle"] },
+    Draw: {
+      options: ["Rectangle"]
+    },
   };
 
   // app config
@@ -225,7 +229,138 @@ function viewerSetup() {
     }
   });
 
+  function renderTable(idDelete) {
+    coordinates = coordinates.filter(item => item.id !== idDelete);
+    //continuamos con la eliminacion en la tabla
+    const coordinatesTable = document.querySelector(
+      ".table_visualizer table tbody"
+    );
+
+    // Limpiar la tabla antes de agregar nuevos datos
+    coordinatesTable.innerHTML = "";
+    let id = 1;
+    coordinates.forEach((coord) => {
+      const newRow = document.createElement("tr");
+      const idCell = document.createElement("td");
+      const xCell = document.createElement("td");
+      const yCell = document.createElement("td");
+      const zCell = document.createElement("td");
+      const buttonCell = document.createElement("td");
+
+      idCell.textContent = id++;
+      xCell.textContent = coord.x;
+      yCell.textContent = coord.y;
+      zCell.textContent = coord.z;
+
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "Eliminar";
+      deleteButton.id = 'deleteActionButton';
+      deleteButton.addEventListener("click", function () {
+        renderTable(coord.id);
+      });
+
+      buttonCell.appendChild(deleteButton);
+
+      newRow.appendChild(idCell);
+      newRow.appendChild(xCell);
+      newRow.appendChild(yCell);
+      newRow.appendChild(zCell);
+      newRow.appendChild(buttonCell);
+
+      coordinatesTable.appendChild(newRow);
+    });
+  }
+
+
+  _app.addEventListener("*", function (event) {
+    console.log("ENTRE NUEVO EVENTO")
+    console.log(event);
+  });
+  _app.addEventListener("drawdelete", function (event) {
+    renderTable(event.id);
+  });
+  _app.addEventListener("drawcreate", function (event) {
+    // console.log(_app.getPositionFromPlanePoint(event.x, event.y));
+    // eslint-disable-next-line curly
+    if (coordinates.length === 0) prevLevel = zLevel;
+    if (coordinates.length < 5 && prevLevel === zLevel) {
+      if (prevLevel === zLevel) {
+        coordinates.push({
+          x: event.x,
+          y: event.y,
+          z: zLevel,
+          id: event.id,
+        });
+        const coordinatesTable = document.querySelector(
+          ".table_visualizer table tbody"
+        );
+
+        // Limpiar la tabla antes de agregar nuevos datos
+        coordinatesTable.innerHTML = "";
+        let id = 1;
+        coordinates.forEach((coord) => {
+          const newRow = document.createElement("tr");
+          const idCell = document.createElement("td");
+          const xCell = document.createElement("td");
+          const yCell = document.createElement("td");
+          const zCell = document.createElement("td");
+          const buttonCell = document.createElement("td");
+
+          idCell.textContent = id++;
+          xCell.textContent = coord.x;
+          yCell.textContent = coord.y;
+          zCell.textContent = coord.z;
+
+          const deleteButton = document.createElement("button");
+          deleteButton.textContent = "Eliminar";
+          deleteButton.id = 'deleteActionButton';
+          deleteButton.addEventListener("click", function () {
+            //Lamado del evento delete
+            // eslint-disable-next-line max-len
+            const deleteActionButton = document.querySelector('#deleteActionButton');
+            const eventoDrawDelete = new Event('drawdelete');
+            eventoDrawDelete.id = coord.id;
+            eventoDrawDelete.dataid = '0';
+            eventoDrawDelete.type = 'drawdelete';
+            deleteActionButton.dispatchEvent(eventoDrawDelete);
+            renderTable(coord.id);
+          });
+
+          buttonCell.appendChild(deleteButton);
+
+          newRow.appendChild(idCell);
+          newRow.appendChild(xCell);
+          newRow.appendChild(yCell);
+          newRow.appendChild(zCell);
+          newRow.appendChild(buttonCell);
+
+          coordinatesTable.appendChild(newRow);
+        });
+      }
+    } else {
+      // eslint-disable-next-line max-len
+      alert('Los puntos seleccionados deben estar en el mismo nivel ( posición Z )');
+    }
+    // console.log(getPositionFromPlanePoint(event.x, event.y));
+  })
+
+  // function getPositionFromPlanePoint(x, y) {
+  //   // keep third direction
+  //   const k = this.getCurrentScrollIndexValue();
+  //   const planePoint = new Point3D(x, y, k);
+  //   // de-orient
+  //   const point = this.planeHelper.getImageOrientedPoint3D(planePoint);
+  //   // ~indexToWorld to not loose precision
+  //   const geometry = this.view.getImage().getGeometry();
+  //   const point3D = geometry.pointToWorld(point);
+  //   // merge with current position to keep extra dimensions
+  //   return this.getCurrentPosition().mergeWith3D(point3D);
+  // }
+
+
+
   _app.addEventListener("positionchange", function (event) {
+    zLevel = event.value[0][3];
     const input = document.getElementById("position");
     const values = event.value[1];
     let text = "(index: " + event.value[0] + ")";
@@ -237,37 +372,7 @@ function viewerSetup() {
     const span = document.getElementById("positionspan");
 
     //Keep postion on cordinates
-    if (coordinates.length < 5) {
-      coordinates.push(event.value[1]);
-      console.log(coordinates);
-      span.innerHTML = text;
-      const coordinatesTable = document.querySelector(
-        ".table_visualizer table tbody"
-      );
 
-      // Limpiar la tabla antes de agregar nuevos datos
-      coordinatesTable.innerHTML = "";
-      let id = 1;
-      coordinates.forEach((coord) => {
-        const newRow = document.createElement("tr");
-        const idCell = document.createElement("td");
-        const xCell = document.createElement("td");
-        const yCell = document.createElement("td");
-        const zCell = document.createElement("td");
-
-        idCell.textContent = id++;
-        xCell.textContent = coord[0];
-        yCell.textContent = coord[1];
-        zCell.textContent = coord[2];
-
-        newRow.appendChild(idCell);
-        newRow.appendChild(xCell);
-        newRow.appendChild(yCell);
-        newRow.appendChild(zCell);
-
-        coordinatesTable.appendChild(newRow);
-      });
-    }
   });
 
   // default keyboard shortcuts
@@ -313,12 +418,10 @@ function viewerSetup() {
   const options = {};
   // special dicom web request header
   if (_dicomWeb) {
-    options.requestHeaders = [
-      {
-        name: "Accept",
-        value: 'multipart/related; type="application/dicom"; transfer-syntax=*',
-      },
-    ];
+    options.requestHeaders = [{
+      name: "Accept",
+      value: 'multipart/related; type="application/dicom"; transfer-syntax=*',
+    }, ];
   }
   // load from window location
   _app.loadFromUri(window.location.href, options);
@@ -446,7 +549,9 @@ function addLayerGroups(number) {
  * @returns {object} The config
  */
 function getViewConfig(divId) {
-  const config = { divId: divId };
+  const config = {
+    divId: divId
+  };
   if (_layout === "mpr") {
     if (divId === "layerGroup0") {
       config.orientation = "axial";
@@ -655,7 +760,9 @@ function setupToolsCheckboxes() {
       _app.setTool(tool);
       if (tool === "Draw") {
         const name = _tools.Draw.options[0];
-        _app.setToolFeatures({ shapeName: name });
+        _app.setToolFeatures({
+          shapeName: name
+        });
       }
     };
   };
@@ -1275,10 +1382,10 @@ function runRenderTest() {
 
   let startTime;
   const timings = [];
-  const onRenderStart = function (/*event*/) {
+  const onRenderStart = function ( /*event*/ ) {
     startTime = performance.now();
   };
-  const onRenderEnd = function (/*event*/) {
+  const onRenderEnd = function ( /*event*/ ) {
     const endTime = performance.now();
     timings.push(endTime - startTime);
     startTime = undefined;

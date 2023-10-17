@@ -562,6 +562,7 @@ export class View {
    * @fires View#positionchange
    */
   setCurrentPosition(position, silent) {
+    console.log(position);
     // send invalid event if not in bounds
     const geometry = this.#image.getGeometry();
     const index = geometry.worldToIndex(position);

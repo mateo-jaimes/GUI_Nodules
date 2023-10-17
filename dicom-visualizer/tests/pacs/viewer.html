@@ -338,33 +338,33 @@ progress {
     
     <div class="line">
       <div class="line-item">
-        <label for="position"><strong>Position:</strong></label>
+        <label for="position"><strong>Posición:</strong></label>
         <input type="text" id="position" autocomplete="off">
         <span hidden id="positionspan"></span>
       </div>
       <div class="line-item" >
-        <label for="changelayout"><strong>Layout:</strong></label>
+        <label for="changelayout"><strong>Disposición:</strong></label>
         <select name="layout" id="changelayout" autocomplete="off" disabled>
-          <option value="one">One</option>
-          <option value="side">Side by side</option>
+          <option value="one">Uno</option>
+          <option value="side">Lado a lado</option>
           <option value="mpr">MPR</option>
         </select>
-        <button id="resetlayout" disabled>Reset views</button>
-        <input type="checkbox" id="changesmoothing">
-        <label for="changesmoothing">Smoothing</label>
+        <button id="resetlayout" disabled>Restablecer vistas</button>
+        <input hidden type="checkbox" id="changesmoothing">
+        <label hidden for="changesmoothing">Suavizado</label>
       </div>
 
-      <div class="line-item" style="margin-right: 2%;" id="tools"><strong>Tools:</strong></div>
+      <div class="line-item" style="margin-right: 2%;" id="tools"><strong>Herramientas:</strong></div>
       
     </div>
     
-    <div hidden id="binders" >Binders:</div>
+    <div hidden id="binders" >Carpetas:</div>
     
     <div id="layersdetails"></div>
     
-    <div hidden id="tests">Tests:</div>
+    <div hidden id="tests">Pruebas:</div>
     
-    <div hidden id="about">About: </div>
+    <div hidden id="about">Acerca de: </div>
     
   </div>
   <div class="table_visualizer" id="table_visualizer">
@@ -375,12 +375,13 @@ progress {
               <th>X</th>
               <th>Y</th>
               <th>Z</th>
+              <th>Acciones</th>
           </tr>
       </thead>
       <tbody>          
       </tbody>
   </table>
-  <button id="btn_process" type="submit" onclick="procces()" class="Process_btn">Process</button>
+  <button id="btn_process" type="submit" onclick="procces()" class="Process_btn">Procesar</button>
   </div>
 
 
