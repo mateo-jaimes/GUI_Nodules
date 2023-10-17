@@ -64,7 +64,7 @@ export class Draw {
   #app;
 
   /**
-   * Scroll wheel handler.
+   * Desplazar wheel handler.
    *
    * @type {ScrollWheel}
    */

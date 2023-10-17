@@ -3249,7 +3249,7 @@ export declare class ViewController {
      */
     incrementScrollIndex(silent?: boolean): boolean;
     /**
-     * Scroll play: loop through all slices.
+     * Desplazar play: loop through all slices.
      */
     play(): void;
     /**

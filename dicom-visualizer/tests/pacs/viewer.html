@@ -76,7 +76,7 @@ canvas {
   border-radius: 15px;
   margin-top: 2%;
   display: flex; /* Utilizar flexbox */
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 .line-item {
@@ -338,18 +338,18 @@ progress {
     
     <div class="line">
       <div class="line-item">
-        <label for="position"><strong>Posición:</strong></label>
-        <input type="text" id="position" autocomplete="off">
+        <label hidden for="position"><strong>Posición:</strong></label>
+        <input hidden type="text" id="position" autocomplete="off">
         <span hidden id="positionspan"></span>
       </div>
       <div class="line-item" >
-        <label for="changelayout"><strong>Disposición:</strong></label>
-        <select name="layout" id="changelayout" autocomplete="off" disabled>
-          <option value="one">Uno</option>
-          <option value="side">Lado a lado</option>
-          <option value="mpr">MPR</option>
+        <label hidden for="changelayout"><strong>Disposición:</strong></label>
+        <select hidden name="layout" id="changelayout" autocomplete="off" disabled>
+          <option hidden value="one">Uno</option>
+          <option hidden value="side">Lado a lado</option>
+          <option hidden value="mpr">MPR</option>
         </select>
-        <button id="resetlayout" disabled>Restablecer vistas</button>
+        <button hidden id="resetlayout" disabled>Restablecer vistas</button>
         <input hidden type="checkbox" id="changesmoothing">
         <label hidden for="changesmoothing">Suavizado</label>
       </div>

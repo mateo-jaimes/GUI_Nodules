@@ -318,7 +318,7 @@ export class ViewLayer {
     this.#opacity = Math.min(Math.max(alpha, 0), 1);
 
     /**
-     * Opacity change event.
+     * Opacidad change event.
      *
      * @event App#opacitychange
      * @type {object}

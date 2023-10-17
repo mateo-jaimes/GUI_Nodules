@@ -8,7 +8,7 @@ import {App} from '../app/application';
 /* eslint-enable no-unused-vars */
 
 /**
- * ZoomAndPan class.
+ * Mover class.
  *
  * @example
  * // create the dwv app
@@ -16,18 +16,18 @@ import {App} from '../app/application';
  * // initialise
  * app.init({
  *   dataViewConfigs: {'*': [{divId: 'layerGroup0'}]},
- *   tools: {ZoomAndPan: {}}
+ *   tools: {Mover: {}}
  * });
  * // activate tool
  * app.addEventListener('load', function () {
- *   app.setTool('ZoomAndPan');
+ *   app.setTool('Mover');
  * });
  * // load dicom data
  * app.loadURLs([
  *   'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323851.dcm'
  * ]);
  */
-export class ZoomAndPan {
+export class Mover {
 
   /**
    * Associated app.
@@ -239,7 +239,7 @@ export class ZoomAndPan {
    * @param {object} event The key down event.
    */
   keydown = (event) => {
-    event.context = 'ZoomAndPan';
+    event.context = 'Mover';
     this.#app.onKeydown(event);
   };
 
@@ -259,4 +259,4 @@ export class ZoomAndPan {
     // does nothing
   }
 
-} // ZoomAndPan class
+} // Mover class

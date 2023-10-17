@@ -12,11 +12,11 @@ Displays:
  * [display example #1](./App.html#App) ([gist](https://gist.github.com/ivmartel/7415ca9b21209e83b5e713d838529795)): the simplest DICOM display example!
  * [display example #1.1](https://jsfiddle.net/ivmartel/jkcmj0px/): any number of displays you want (_jsfiddle_)
  * [display example #1.2](./App.html#init): manual render
- * [display example #2](./WindowLevel.html#WindowLevel): with window/level
+ * [display example #2](./Contraste.html#Contraste): with window/level
  * [display example #2.1](https://jsfiddle.net/ivmartel/fugw49be/): with draw tool (_jsfiddle_)
- * [display example #2.2](./ZoomAndPan.html#ZoomAndPan): with zoom and pan
- * [display example #2.3](./Opacity.html#Opacity): with opacity
- * [display example #3](./Scroll.html#Scroll): with multiple slices with or without a slider
+ * [display example #2.2](./Mover.html#Mover): with zoom and pan
+ * [display example #2.3](./Opacidad.html#Opacidad): with opacity
+ * [display example #3](./Desplazar.html#Desplazar): with multiple slices with or without a slider
 
 All the ones of jsfiddle: [ivmartel/fiddles](https://jsfiddle.net/user/ivmartel/fiddles/).
 

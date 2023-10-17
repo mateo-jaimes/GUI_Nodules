@@ -9,7 +9,7 @@ let _tools = null;
 let coordinates = [];
 let files = null;
 let zLevel = 0;
-let prevLevel = -1;
+
 
 // viewer options
 let _layout = "one";
@@ -81,12 +81,12 @@ function viewerSetup() {
 
   // tools
   _tools = {
-    Scroll: {},
-    WindowLevel: {},
-    ZoomAndPan: {},
-    Opacity: {},
+    Desplazar: {},
+    Contraste: {},
+    Mover: {},
+    Opacidad: {},
     Draw: {
-      options: ["Rectangle"]
+      options: ["Circle"]
     },
   };
 
@@ -282,67 +282,62 @@ function viewerSetup() {
   _app.addEventListener("drawcreate", function (event) {
     // console.log(_app.getPositionFromPlanePoint(event.x, event.y));
     // eslint-disable-next-line curly
-    if (coordinates.length === 0) prevLevel = zLevel;
-    if (coordinates.length < 5 && prevLevel === zLevel) {
-      if (prevLevel === zLevel) {
-        coordinates.push({
-          x: event.x,
-          y: event.y,
-          z: zLevel,
-          id: event.id,
+    if (coordinates.length < 5) {
+      coordinates.push({
+        // eslint-disable-next-line max-len
+        x: event.layer.children[zLevel].children[event.layer.children[zLevel].children.length - 1].children[1].attrs.x,
+        // eslint-disable-next-line max-len
+        y: event.layer.children[zLevel].children[event.layer.children[zLevel].children.length - 1].children[1].attrs.y,
+        z: zLevel,
+        id: event.id,
+      });
+      const coordinatesTable = document.querySelector(
+        ".table_visualizer table tbody"
+      );
+
+      // Limpiar la tabla antes de agregar nuevos datos
+      coordinatesTable.innerHTML = "";
+      let id = 1;
+      coordinates.forEach((coord) => {
+        const newRow = document.createElement("tr");
+        const idCell = document.createElement("td");
+        const xCell = document.createElement("td");
+        const yCell = document.createElement("td");
+        const zCell = document.createElement("td");
+        const buttonCell = document.createElement("td");
+
+        idCell.textContent = id++;
+        xCell.textContent = coord.x;
+        yCell.textContent = coord.y;
+        zCell.textContent = coord.z;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Eliminar";
+        deleteButton.id = 'deleteActionButton';
+        deleteButton.addEventListener("click", function () {
+          //Lamado del evento delete
+          // eslint-disable-next-line max-len
+          const deleteActionButton = document.querySelector('#deleteActionButton');
+          const eventoDrawDelete = new Event('drawdelete');
+          eventoDrawDelete.id = coord.id;
+          eventoDrawDelete.dataid = '0';
+          eventoDrawDelete.type = 'drawdelete';
+          deleteActionButton.dispatchEvent(eventoDrawDelete);
+          renderTable(coord.id);
         });
-        const coordinatesTable = document.querySelector(
-          ".table_visualizer table tbody"
-        );
 
-        // Limpiar la tabla antes de agregar nuevos datos
-        coordinatesTable.innerHTML = "";
-        let id = 1;
-        coordinates.forEach((coord) => {
-          const newRow = document.createElement("tr");
-          const idCell = document.createElement("td");
-          const xCell = document.createElement("td");
-          const yCell = document.createElement("td");
-          const zCell = document.createElement("td");
-          const buttonCell = document.createElement("td");
+        buttonCell.appendChild(deleteButton);
 
-          idCell.textContent = id++;
-          xCell.textContent = coord.x;
-          yCell.textContent = coord.y;
-          zCell.textContent = coord.z;
+        newRow.appendChild(idCell);
+        newRow.appendChild(xCell);
+        newRow.appendChild(yCell);
+        newRow.appendChild(zCell);
+        newRow.appendChild(buttonCell);
 
-          const deleteButton = document.createElement("button");
-          deleteButton.textContent = "Eliminar";
-          deleteButton.id = 'deleteActionButton';
-          deleteButton.addEventListener("click", function () {
-            //Lamado del evento delete
-            // eslint-disable-next-line max-len
-            const deleteActionButton = document.querySelector('#deleteActionButton');
-            const eventoDrawDelete = new Event('drawdelete');
-            eventoDrawDelete.id = coord.id;
-            eventoDrawDelete.dataid = '0';
-            eventoDrawDelete.type = 'drawdelete';
-            deleteActionButton.dispatchEvent(eventoDrawDelete);
-            renderTable(coord.id);
-          });
-
-          buttonCell.appendChild(deleteButton);
-
-          newRow.appendChild(idCell);
-          newRow.appendChild(xCell);
-          newRow.appendChild(yCell);
-          newRow.appendChild(zCell);
-          newRow.appendChild(buttonCell);
-
-          coordinatesTable.appendChild(newRow);
-        });
-      }
-    } else {
-      // eslint-disable-next-line max-len
-      alert('Los puntos seleccionados deben estar en el mismo nivel ( posición Z )');
+        coordinatesTable.appendChild(newRow);
+      });
     }
-    // console.log(getPositionFromPlanePoint(event.x, event.y));
-  })
+  });
 
   // function getPositionFromPlanePoint(x, y) {
   //   // keep third direction
@@ -669,7 +664,7 @@ function getDataLayerGroupDivIds(dataId) {
  */
 function setupBindersCheckboxes() {
   const bindersDiv = document.getElementById("binders");
-  const propList = ["WindowLevel", "Position", "Zoom", "Offset", "Opacity"];
+  const propList = ["Contraste", "Position", "Zoom", "Offset", "Opacidad"];
   const binders = [];
   // add all binders at startup
   for (let b = 0; b < propList.length; ++b) {
@@ -789,7 +784,7 @@ function setupToolsCheckboxes() {
     input.type = "radio";
     input.onchange = getChangeTool(key);
 
-    if (key === "Scroll") {
+    if (key === "Desplazar") {
       input.checked = true;
     }
 

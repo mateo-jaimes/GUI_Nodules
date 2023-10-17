@@ -8,7 +8,7 @@ import {App} from '../app/application';
 /* eslint-enable no-unused-vars */
 
 /**
- * Scroll class.
+ * Desplazar class.
  *
  * @example
  * // create the dwv app
@@ -16,11 +16,11 @@ import {App} from '../app/application';
  * // initialise
  * app.init({
  *   dataViewConfigs: {'*': [{divId: 'layerGroup0'}]},
- *   tools: {Scroll: {}}
+ *   tools: {Desplazar: {}}
  * });
  * // activate tool
  * app.addEventListener('load', function () {
- *   app.setTool('Scroll');
+ *   app.setTool('Desplazar');
  * });
  * // load dicom data
  * app.loadURLs([
@@ -34,7 +34,7 @@ import {App} from '../app/application';
  * // initialise
  * app.init({
  *   dataViewConfigs: {'*': [{divId: 'layerGroup0'}]},
- *   tools: {Scroll: {}}
+ *   tools: {Desplazar: {}}
  * });
  * // create range
  * const range = document.createElement('input');
@@ -53,7 +53,7 @@ import {App} from '../app/application';
  * }
  * // activate tool and update range max on load
  * app.addEventListener('load', function () {
- *   app.setTool('Scroll');
+ *   app.setTool('Desplazar');
  *   const size = app.getImage(0).getGeometry().getSize();
  *   range.max = size.get(2) - 1;
  * });
@@ -70,7 +70,7 @@ import {App} from '../app/application';
  *   'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323563.dcm'
  * ]);
  */
-export class Scroll {
+export class Desplazar {
   /**
    * Associated app.
    *
@@ -86,7 +86,7 @@ export class Scroll {
   #started = false;
 
   /**
-   * Scroll wheel handler.
+   * Desplazar wheel handler.
    *
    * @type {ScrollWheel}
    */
@@ -280,7 +280,7 @@ export class Scroll {
    * @param {object} event The key down event.
    */
   keydown = (event) => {
-    event.context = 'Scroll';
+    event.context = 'Desplazar';
     this.#app.onKeydown(event);
   };
 
@@ -375,4 +375,4 @@ export class Scroll {
     // does nothing
   }
 
-} // Scroll class
+} // Desplazar class

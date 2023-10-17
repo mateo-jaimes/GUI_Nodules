@@ -1,7 +1,7 @@
-import {WindowLevel} from './windowLevel';
-import {Scroll} from './scroll';
-import {ZoomAndPan} from './zoomPan';
-import {Opacity} from './opacity';
+import {Contraste} from './windowLevel';
+import {Desplazar} from './scroll';
+import {Mover} from './zoomPan';
+import {Opacidad} from './opacity';
 import {Draw} from './draw';
 import {Floodfill} from './floodfill';
 import {Livewire} from './livewire';
@@ -18,10 +18,10 @@ import {RulerFactory} from './ruler';
 import {Filter, Threshold, Sobel, Sharpen} from './filter';
 
 export const toolList = {
-  WindowLevel,
-  Scroll,
-  ZoomAndPan,
-  Opacity,
+  Contraste,
+  Desplazar,
+  Mover,
+  Opacidad,
   Draw,
   Filter,
   Floodfill,

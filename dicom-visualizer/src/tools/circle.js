@@ -8,6 +8,7 @@ import {DRAW_DEBUG} from './draw';
 // external
 import Konva from 'konva';
 
+let countPoints = 0;
 /**
  * Circle factory.
  */
@@ -57,11 +58,12 @@ export class CircleFactory {
    * @param {object} viewController The associated view controller.
    * @returns {object} The Konva group.
    */
-  create(points, style, viewController) {
+  create(points, style, viewController, index) {
     // calculate radius
-    const a = Math.abs(points[0].getX() - points[1].getX());
-    const b = Math.abs(points[0].getY() - points[1].getY());
-    const radius = Math.round(Math.sqrt(a * a + b * b));
+    // const a = Math.abs(points[0].getX() - points[1].getX());
+    // const b = Math.abs(points[0].getY() - points[1].getY());
+    console.log(index);
+    const radius = Math.round(5);
     // physical shape
     const circle = new Circle(points[0], radius);
     // draw shape
@@ -94,12 +96,12 @@ export class CircleFactory {
     const quant = circle.quantify(
       viewController,
       getFlags(textExpr));
-    ktext.setText(replaceFlags(textExpr, quant));
+    ktext.setText(index);
     // augment text with meta data
     // @ts-ignore
     ktext.meta = {
-      textExpr: textExpr,
-      quantification: quant
+      textExpr: '',
+      quantification: ''
     };
     // label
     const klabel = new Konva.Label({

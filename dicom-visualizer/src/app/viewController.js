@@ -648,7 +648,7 @@ export class ViewController {
   }
 
   /**
-   * Scroll play: loop through all slices.
+   * Desplazar play: loop through all slices.
    */
   play() {
     // ensure data is scrollable: dim >= 3

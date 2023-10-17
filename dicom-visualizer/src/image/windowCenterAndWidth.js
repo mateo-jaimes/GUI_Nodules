@@ -197,4 +197,4 @@ export class WindowCenterAndWidth {
       this.getWidth() === rhs.getWidth();
   }
 
-} // class WindowLevel
+} // class Contraste

@@ -96,7 +96,7 @@ export class OffsetBinder {
 }
 
 /**
- * Opacity binder. Only propagates to view layers of the same data.
+ * Opacidad binder. Only propagates to view layers of the same data.
  */
 export class OpacityBinder {
   getEventType = function () {

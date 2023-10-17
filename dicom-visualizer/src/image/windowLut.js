@@ -102,7 +102,7 @@ export class WindowLut {
       const size = this.#rescaleLut.getLength();
       // use clamped array (polyfilled in env.js)
       this.#lut = new Uint8ClampedArray(size);
-      // by default WindowLevel returns a value in the [0,255] range
+      // by default Contraste returns a value in the [0,255] range
       // this is ok with regular Arrays and ClampedArray.
       for (let i = 0; i < size; ++i) {
         this.#lut[i] = this.#windowLevel.apply(this.#rescaleLut.getValue(i));

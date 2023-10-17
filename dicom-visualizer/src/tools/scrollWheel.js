@@ -6,7 +6,7 @@ import {App} from '../app/application';
 /* eslint-enable no-unused-vars */
 
 /**
- * Scroll wheel class: provides a wheel event handler
+ * Desplazar wheel class: provides a wheel event handler
  *   that scroll the corresponding data.
  */
 export class ScrollWheel {

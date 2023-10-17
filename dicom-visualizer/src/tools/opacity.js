@@ -7,7 +7,7 @@ import {App} from '../app/application';
 /* eslint-enable no-unused-vars */
 
 /**
- * Opacity class.
+ * Opacidad class.
  *
  * @example
  * // create the dwv app
@@ -15,18 +15,18 @@ import {App} from '../app/application';
  * // initialise
  * app.init({
  *   dataViewConfigs: {'*': [{divId: 'layerGroup0'}]},
- *   tools: {Opacity: {}}
+ *   tools: {Opacidad: {}}
  * });
  * // activate tool
  * app.addEventListener('load', function () {
- *   app.setTool('Opacity');
+ *   app.setTool('Opacidad');
  * });
  * // load dicom data
  * app.loadURLs([
  *   'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323851.dcm'
  * ]);
  */
-export class Opacity {
+export class Opacidad {
   /**
    * Associated app.
    *
@@ -42,7 +42,7 @@ export class Opacity {
   #started = false;
 
   /**
-   * Scroll wheel handler.
+   * Desplazar wheel handler.
    *
    * @type {ScrollWheel}
    */
@@ -163,7 +163,7 @@ export class Opacity {
    * @param {object} event The key down event.
    */
   keydown = (event) => {
-    event.context = 'Opacity';
+    event.context = 'Opacidad';
     this.#app.onKeydown(event);
   };
 
@@ -183,4 +183,4 @@ export class Opacity {
     // does nothing
   }
 
-} // Opacity class
+} // Opacidad class

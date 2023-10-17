@@ -134,10 +134,11 @@ export class DrawGroupCommand {
         type: 'drawcreate',
         id: this.#group.id(),
         dataid: this.#layer.getDataId(),
+        layer: layer
         // eslint-disable-next-line max-len
-        x: layer.children[0].children[layer.children[0].children.length - 1].children[1].attrs.x,
+        // x: layer.children[0].children[layer.children[0].children.length - 1].children[1].attrs.x,
         // eslint-disable-next-line max-len
-        y: layer.children[0].children[layer.children[0].children.length - 1].children[1].attrs.y
+        // y: layer.children[0].children[layer.children[0].children.length - 1].children[1].attrs.y
       });
     }
   }

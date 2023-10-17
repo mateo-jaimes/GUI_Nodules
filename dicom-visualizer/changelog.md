@@ -801,7 +801,7 @@
 
 ### Added
 
-- Scroll: default, only when needed and mouse wheel [#129](https://github.com/ivmartel/dwv/issues/129)
+- Desplazar: default, only when needed and mouse wheel [#129](https://github.com/ivmartel/dwv/issues/129)
 - Allow for multiple app instances on the same page [#124](https://github.com/ivmartel/dwv/issues/124)
 - Add support for per slice rescale slope and intercept [#80](https://github.com/ivmartel/dwv/issues/80)
 - Add tool to measure angles [#8](https://github.com/ivmartel/dwv/issues/8)

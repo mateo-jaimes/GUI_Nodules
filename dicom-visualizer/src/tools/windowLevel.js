@@ -8,7 +8,7 @@ import {App} from '../app/application';
 /* eslint-enable no-unused-vars */
 
 /**
- * WindowLevel tool: handle window/level related events.
+ * Contraste tool: handle window/level related events.
  *
  * @example
  * // create the dwv app
@@ -16,18 +16,18 @@ import {App} from '../app/application';
  * // initialise
  * app.init({
  *   dataViewConfigs: {'*': [{divId: 'layerGroup0'}]},
- *   tools: {WindowLevel: {}}
+ *   tools: {Contraste: {}}
  * });
  * // activate tool
  * app.addEventListener('load', function () {
- *   app.setTool('WindowLevel');
+ *   app.setTool('Contraste');
  * });
  * // load dicom data
  * app.loadURLs([
  *   'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323851.dcm'
  * ]);
  */
-export class WindowLevel {
+export class Contraste {
 
   /**
    * Associated app.
@@ -44,7 +44,7 @@ export class WindowLevel {
   #started = false;
 
   /**
-   * Scroll wheel handler.
+   * Desplazar wheel handler.
    *
    * @type {ScrollWheel}
    */
@@ -198,7 +198,7 @@ export class WindowLevel {
    * @param {object} event The key down event.
    */
   keydown = (event) => {
-    event.context = 'WindowLevel';
+    event.context = 'Contraste';
     this.#app.onKeydown(event);
   };
 
@@ -218,4 +218,4 @@ export class WindowLevel {
     // does nothing
   }
 
-} // WindowLevel class
+} // Contraste class
