@@ -73,13 +73,14 @@ export class App {
   #listenerHandler = new ListenerHandler();
 
   Slice(coordinates, files) {
+    console.log('SLICE: ', coordinates);
     if (coordinates.length > 0) {
       const promise = coordinates.map((coord) =>{
         const formData = new FormData();
         formData.append("file", files[0]);
-        formData.append("x", coord[0]);
-        formData.append("y", coord[1]);
-        formData.append("z", coord[2]);
+        formData.append("x", parseInt(coord.x));
+        formData.append("y", parseInt(coord.y));
+        formData.append("z", parseInt(coord.z));
         this.sendRequest(formData);
       });
 

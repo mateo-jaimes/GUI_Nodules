@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 
+import { LOCALE_ID } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule }from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule }from '@angular/forms';
@@ -23,6 +24,12 @@ import { CreateParametroComponent } from './components/create-parametro/create-p
 import { MenuComponent } from './components/menu/menu.component';
 import { VisualizadorComponent } from './components/visualizador/visualizador.component';
 import { DetalleRegistroComponent } from './components/detalle-registro/detalle-registro.component';
+import localeEs from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
+
+import localePy from '@angular/common/locales/es-PY';
+
+registerLocaleData(localePy, 'es');
 
 @NgModule({
   declarations: [
@@ -53,6 +60,7 @@ import { DetalleRegistroComponent } from './components/detalle-registro/detalle-
   providers: [
     AuthService,
     TokenService,
+    { provide: LOCALE_ID, useValue: 'es-ES' }
   ],
   bootstrap: [AppComponent]
 })

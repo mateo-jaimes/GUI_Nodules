@@ -18,7 +18,8 @@ const _dicomWeb = false;
 /**
  * Setup simple dwv app.
  */
-function procces() {
+function process() {
+  console.log('PROCESS: ', coordinates);
   if (files != null) {
     console.log(_app.Slice(coordinates, files));
   }

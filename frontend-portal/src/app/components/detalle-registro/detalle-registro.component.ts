@@ -59,13 +59,23 @@ export class DetalleRegistroComponent implements OnInit {
         return 'transparent'; // Color por defecto o transparente si no coincide con ninguno
     }
   }
+
   getResultDetails(){
     this.registroService.getByUuid(this.registroUuid).subscribe({
       next:res=>{
+        if (res.seen == null) {
+          this.registroService.updateSeen(this.registroUuid, true, res).subscribe({
+            next: res=>{
+      
+            }
+          }
+      
+          );
+        }
         this.isLoading = false;
         this.processing = false;
         console.log(res);
-        this.resultDetail=res;
+        this.resultDetail = res;
         this.imageShow += this.resultDetail.imagenPrevia;
         this.jsonString = JSON.stringify(this.resultDetail, null, 2);
       },

@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RegistroService } from 'src/app/services/registro.service';
@@ -12,7 +13,8 @@ export class ListRegistroComponent implements OnInit {
 
   
   
-  constructor(private router:Router,private registroService:RegistroService) { }
+  constructor(private router: Router,
+              private registroService: RegistroService) { }
 
   registros:any[] = [];
 
@@ -46,7 +48,14 @@ export class ListRegistroComponent implements OnInit {
     this.registroService.lista().subscribe({
       next:(res:any)=>{
         console.log(res);
-        this.registros=res;
+        this.registros = res;
+        this.registros.forEach((registro) => {
+          if (registro.fecha != null) {
+            registro.fechaFormateada = formatDate(registro.fecha, 'MMMM d, y', 'es');
+            
+          }
+          console.log(registro); 
+        });
         this.isLoading = false;
       },
       error:err=>{

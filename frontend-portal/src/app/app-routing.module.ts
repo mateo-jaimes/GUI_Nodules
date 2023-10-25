@@ -15,8 +15,9 @@ import { CreateTipoRegistroComponent } from './components/create-tipo-registro/c
 import { DetalleRegistroComponent } from './components/detalle-registro/detalle-registro.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
-    path:'auth/login',
+    path:'login',
     component:LoginComponent
   },
   {

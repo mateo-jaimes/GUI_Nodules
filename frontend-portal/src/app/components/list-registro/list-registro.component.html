@@ -1,49 +1,55 @@
 <app-menu></app-menu>
-<div class="wrapper" style="width: 70%; margin-left: auto; margin-right: auto;">
-    <h4  class="mb-4 mt-5 col-md-12 col-sm-12 col-12 text-center col-light"   > RESULTADOS</h4>
-    <div class="table-responsive">
+<div class="wrapper" style="width: 60%; margin-left: auto; margin-right: auto;">
+    <h4 class="title">Resultados</h4>
+    <p class="descripcion">A continuación encontrarás los resultados de clasificación de las regiones de interés
+        de las imágenes TAC procesadas por la inteligencia artificial.</p>
+    <div>
         <table class="table">
-            <thead class="table-dark">
+            <thead class="table-sm" style="color: #666;">
                 <tr>
-                    <th>Id</th>
-                    <th>Fecha</th>
-                    <th>Tipo Registro</th>
-                    <th>Paciente</th>
-                    <th>Estado Visualizción</th>
-                    <th>Ver Detalle</th>
-                    <th>Eliminar</th>
+                    <th class="colID">ID</th>
+                    <th class="colNombre">Nombre del paciente</th>
+                    <th class="colEstudio">Nombre del estudio</th>
+                    <th class="colVisualizacion">Visualización</th>
+                    <th class="colDetalle">Ver detalle</th>
+                    <th class="colFecha">Fecha de creación</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let registro of registros">
+                <tr *ngFor="let registro of registros" style="color: #666;">
                     <td>{{registro.id}}</td>
-                    <td>{{registro.fecha | date:'YYYY-MM-dd'}}</td>
-                    <td>{{registro.tipoRegistro.tipoRegistro}}</td>
                     <td>{{registro.nombrePaciente}}</td>
-                    <td >
-                        <button type="button" class="btn" [ngClass]="{'btn-success': !registro.seen, 'btn-danger': registro.seen}" style="cursor:default;">
-                            <ng-container *ngIf="registro.seen; else icon">
-                                <i class="fa-solid fa-check-circle"></i>
-                            </ng-container>
-                            <ng-template #icon>
-                                <i class="fa-solid fa-eye"></i>
-                            </ng-template>
+                    <td>{{registro.nombreEstudio}}</td>
+
+                    <td>
+                        <button type="button" class="btn"
+                            [ngClass]="{'btn-success': registro.seen, 'btn-warning': !registro.seen}"
+                            style="cursor: default;">
+                            {{ registro.seen ? 'Abierto' : 'Pendiente' }}
                         </button>
                     </td>
-                    <td><button class="btn btn-outline-warning" (click)="this.redirect(registro)"><i class="fa-solid fa-eye"></i></button></td>
-                    <td><button class="btn btn-outline-danger" (click)="confirmarEliminar(registro)"><i class="fa-solid fa-trash-can"></i></button></td>
+                    <td style="padding-left: 23px">
+                        <button class="btn btn-outline-success" (click)="this.redirect(registro)"><i
+                                class="fa-solid fa-eye"></i>
+                            </button>
+                    </td>
+                    <td>
+                        <div style="font-size: 1em; text-transform: capitalize; font-weight: bold; color: black;">
+                            {{ registro.fechaFormateada }}
+                        </div>
+                        <div style="font-size: 0.9em; color: grey;">
+                            {{ registro.fecha | date:'h:mm:ss a' }}
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <div class="mx-auto" style="width: 200px;">
-        <button type="button" class="btn btn-success"  [routerLink]="['/registros/crear']">Crear Registros</button>
-      </div>
 </div>
 
 <div class="overlay" *ngIf="isLoading">
     <div class="spinner">
         <div class="loader"></div>
-        <p>Loading...</p>
+        <p>Cargando...</p>
     </div>
 </div>
