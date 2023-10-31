@@ -104,14 +104,16 @@ export class App {
           console.log("Respuesta del servidor:", respuesta);
           // Abre una nueva ventana del navegador con un mensaje
           Swal.fire({
-            title: "¡Hola!",
+            title: coordinates.length == 1
+                  ? "Estamos trabajando en la clasificación de la región que seleccionaste en tu imagen TAC."
+                  : "Estamos trabajando en la clasificación de las regiones que seleccionaste en tu imagen TAC.",
             text:
               coordinates.length == 1
-                ? "Deseas ver el detalle de tu imagen?"
-                : "Deseas ver tus resultados?",
+                ? "Nuestra inteligencia artificial está analizando el área seleccionada para proporcionarte los resultados de clasificación. Este proceso puede tardar de 1 a 2 minutos, ¿deseas consultar el resultado?"
+                : "Nuestra inteligencia artificial está analizando las áreas seleccionadas para proporcionarte los resultados de clasificación. Este proceso puede tardar de 1 a 2 minutos, ¿deseas consultar los resultado?",
             icon: "info",
-            confirmButtonText: "Aceptar",
-            cancelButtonText: "Cancelar",
+            confirmButtonText: "Ver resultado",
+            cancelButtonText: "Ver más tarde",
             showCancelButton: true,
           }).then((result) => {
             if (result.value) {
@@ -131,6 +133,12 @@ export class App {
             "Error en la solicitud. Código de estado:",
             xhr.status
           );
+          Swal.fire({
+            title: "Error en la solicitud.",
+            text: "Temporalmente fuera de servicio",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+          })
         }
       };
 

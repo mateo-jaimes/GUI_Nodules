@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2, OnInit } from '@angular/core';
+import { Component, ElementRef, Renderer2, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RegistroService } from 'src/app/services/registro.service';
 import Swal from 'sweetalert2';
@@ -29,20 +29,20 @@ export class DetalleRegistroComponent implements OnInit {
     const params = this.activatedRoute.snapshot.params;
     this.registroUuid = params['uuid'];
     this.getResultDetails();
-    const imageContainer = this.el.nativeElement.querySelector('.image-container');
-    const image = imageContainer.querySelector('img');
+    // const imageContainer = this.el.nativeElement.querySelector('.image-container');
+    // const image = imageContainer.querySelector('img');
 
-    let isZoomed = false;
+    // let isZoomed = false;
 
-    this.renderer.listen(imageContainer, 'click', () => {
-      isZoomed = !isZoomed;
+    // this.renderer.listen(image, 'click', () => {
+    //   isZoomed = !isZoomed;
 
-      if (isZoomed) {
-        this.renderer.addClass(imageContainer, 'zoomed');
-      } else {
-        this.renderer.removeClass(imageContainer, 'zoomed');
-      }
-    });
+    //   if (isZoomed) {
+    //     this.renderer.addClass(imageContainer, 'zoomed');
+    //   } else {
+    //     this.renderer.removeClass(imageContainer, 'zoomed');
+    //   }
+    // });
   }
 
   getColorBackground(id: number): string {
