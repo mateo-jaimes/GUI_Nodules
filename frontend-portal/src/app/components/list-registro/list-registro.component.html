@@ -19,7 +19,7 @@
                 <tr *ngFor="let registro of registros" style="color: #666;">
                     <td>{{registro.id}}</td>
                     <td>{{registro.nombrePaciente}}</td>
-                    <td>{{registro.nombreEstudio}}</td>
+                    <td>{{registro.nombreEstudio ? registro.nombreEstudio : "Sin Nombre De Estudio"}}</td>
 
                     <td>
                         <button type="button" class="btn"

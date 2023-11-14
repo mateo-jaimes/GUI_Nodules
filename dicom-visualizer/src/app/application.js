@@ -81,6 +81,7 @@ export class App {
         formData.append("x", parseInt(coord.x));
         formData.append("y", parseInt(coord.y));
         formData.append("z", parseInt(coord.z));
+        console.log(formData);
         this.sendRequest(formData);
       });
 

@@ -12,7 +12,7 @@
     </div>
     <div class="data-block">
       <p><strong>Nombre del Paciente</strong><br> {{ resultDetail.nombrePaciente }}</p>
-      <p><strong>Nombre del Estudio</strong><br> {{ resultDetail.nombreEstudio }}</p>
+      <p><strong>Nombre del Estudio</strong><br> {{ resultDetail.nombreEstudio ? resultDetail.nombreEstudio : "Sin Nombre De Estudio"}}</p>
     </div>
     <div class="data-block">
       <p><strong>Usuario</strong><br> {{ resultDetail.user.nombre }} {{ resultDetail.user.apellido }}</p>

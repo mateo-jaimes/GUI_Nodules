@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { TokenService } from 'src/app/services/token.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +31,33 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin():void{
-    this.router.navigate(['usuario/listar']);
+    if(this.nombreUsuario=="esrojas27" && this.password=="pass123") {
+      localStorage.setItem('userRole', "MEDICO")
+      this.router.navigate(['registros/listar']);
+      Swal.fire({
+        title: 'Login Exitoso',
+        text:"Rol ingresado : MEDICO",
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      });
+    } else if(this.nombreUsuario=="ADMIN" && this.password=="pass123") {
+      localStorage.setItem('userRole', "ADMIN")
+      this.router.navigate(['registros/listar']);
+      Swal.fire({
+        title: 'Login Exitoso',
+        text:"Rol ingresado : ADMIN",
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      });
+    } else{
+      Swal.fire({
+        title: 'Error En Login',
+        text:"Credenciales invalidas",
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
+    }
+    
     // this.loginUsuario.name=this.nombreUsuario;
     // this.loginUsuario.pass=this.password;
     // this.authService.login(this.loginUsuario).subscribe({

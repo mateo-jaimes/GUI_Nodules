@@ -10,7 +10,7 @@
     width: 350px;
     margin-top: 10%;
     margin-bottom: auto;
-    background: #4d4d4d;
+    background: #d5d5d5 !important;
     position: relative;
     display: flex;
     justify-content: center;
@@ -43,7 +43,7 @@
 }
 .login_btn {
     width: 100%;
-    background: #c0392b !important;
+    background: #2b7fc0 !important;
     color: white !important;
 }
 .login_btn:focus {
@@ -54,7 +54,7 @@
     padding: 0 2rem;
 }
 .input-group-text {
-    background: #c0392b !important;
+    background: #2b7fc0 !important;
     color: white !important;
     border: 0 !important;
     border-radius: 0.25rem 0 0 0.25rem !important;

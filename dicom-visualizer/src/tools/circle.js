@@ -63,7 +63,7 @@ export class CircleFactory {
     // const a = Math.abs(points[0].getX() - points[1].getX());
     // const b = Math.abs(points[0].getY() - points[1].getY());
     console.log(index);
-    const radius = Math.round(5);
+    const radius = Math.round(15);
     // physical shape
     const circle = new Circle(points[0], radius);
     // draw shape

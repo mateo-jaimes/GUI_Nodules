@@ -10,7 +10,7 @@
     <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav mr-auto">
             <div class="dropdown">
-                <li class="nav-item"  >
+                <li class="nav-item"  *ngIf="userRole=='ADMIN'">
                     <a class="nav-link sizeMenu " id="dropdownMenuButton" 
                         style="cursor: pointer;"
                         data-toggle="dropdown" aria-expanded="false">
